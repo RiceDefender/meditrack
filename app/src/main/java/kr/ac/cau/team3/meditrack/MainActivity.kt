@@ -1,6 +1,7 @@
 package kr.ac.cau.team3.meditrack
 
 import android.os.Bundle
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -9,12 +10,21 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kr.ac.cau.team3.meditrack.databinding.ActivityMainBinding
+import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Frequency
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Medication
+import kr.ac.cau.team3.meditrack.data.source.local.entities.User
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Weekday
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+    private val db by lazy { MeditrackDatabase.getDatabase(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +42,62 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
                 .setAnchorView(R.id.fab).show()
+        }
+
+        // 2. Run the Test immediately on startup
+        runDatabaseSmokeTest()
+    }
+
+    private fun runDatabaseSmokeTest() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            Log.d("DB_TEST", "--- Starting Database Smoke Test ---")
+
+            try {
+                // STEP 1: Create & Insert User
+                val testUser = User(
+                    user_name = "TestUser_${System.currentTimeMillis()}", // Unique name
+                    user_passwordhash = "secret_hash"
+                )
+                db.UserDao().upsert(testUser)
+
+                // Fetch back to get the auto-generated ID
+                val savedUser = db.UserDao().getByName(testUser.user_name)
+
+                if (savedUser == null) {
+                    Log.e("DB_TEST", "Failed to save user!")
+                    return@launch
+                }
+                Log.d("DB_TEST", "User Saved: ID=${savedUser.user_id}, Name=${savedUser.user_name}")
+
+
+                // STEP 2: Create & Insert Medication linked to User
+                val testMed = Medication(
+                    medication_user_id = savedUser.user_id,
+                    medication_name = "Ibuprofen",
+                    medication_category = "Painkiller",
+                    medication_frequency = Frequency.Daily,
+                    medication_weekdays = listOf(Weekday.Monday, Weekday.Wednesday),
+                    medication_interval = null
+                )
+                db.MedicationDao().upsert(testMed)
+                Log.d("DB_TEST", "Medication inserted.")
+
+
+                // STEP 3: Verify Data
+                val userMeds = db.MedicationDao().getMedicationsForUser(savedUser.user_id)
+                Log.d("DB_TEST", "--- Fetching Results ---")
+                Log.d("DB_TEST", "Found ${userMeds.size} medications for user ${savedUser.user_id}")
+
+                userMeds.forEach { med ->
+                    Log.d("DB_TEST", "READ: ${med.medication_name} (Freq: ${med.medication_frequency})")
+                    Log.d("DB_TEST", "DAYS: ${med.medication_weekdays}")
+                }
+
+            } catch (e: Exception) {
+                Log.e("DB_TEST", "CRASH DURING TEST", e)
+            }
+
+            Log.d("DB_TEST", "--- End of Test ---")
         }
     }
 
