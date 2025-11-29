@@ -6,6 +6,11 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="your_prescription">Your Prescription</string>
+    <string name="back">Back</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="import_photo">Import Photo</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -42,5 +47,11 @@
         sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+
+
+
+
+
+
     </string>
 </resources>
