@@ -11,6 +11,11 @@
     <string name="profile_image">Profile Image</string>
     <string name="add_photo">Add Photo</string>
     <string name="import_photo">Import Photo</string>
+    <string name="type">Type</string>
+    <string name="dosage">Dosage</string>
+    <string name="unit">Unit</string>
+    <string name="input_number">Input number</string>
+
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -54,4 +59,20 @@
 
 
     </string>
+    <string name="e_g_paracetamol">e.g. \'Paracetamol\'</string>
+    <string name="medicine_name">Medicine Name</string>
+    <string name="end_date">End Date</string>
+    <string name="date_calendar_placeholder">yyyy/mm/dd</string>
+    <string name="starting_date">Starting Date</string>
+    <string name="menu">Menu</string>
+    <string name="hello">Hello !</string>
+    <string name="we_are_happy_to_help_you_stay_on_track">We are happy to help you stay on track.</string>
+    <string name="add_a_new_prescription">+ Add a new Prescription</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
+    <string name="sign_in">SIGN IN</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email address</string>
+    <string name="login_to_your_account">Login to your Account</string>
+    <string name="meditrack">meditrack</string>
 </resources>
