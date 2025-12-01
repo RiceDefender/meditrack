@@ -46,6 +46,10 @@ class NewPrescriptionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_prescription)
 
+
+
+
+        //importing the photo
         profileImage = findViewById(R.id.profileImage)
         val addPhotoButton = findViewById<ImageView>(R.id.addPhotoButton)
         val importPhotoButton = findViewById<ImageView>(R.id.importPhoto)
@@ -58,7 +62,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         importPhotoButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
-
+        //button go back
         buttonGoBack.setOnClickListener {
             startActivity(Intent(this, WelcomeActivity::class.java))
         }
@@ -140,7 +144,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
 
 
 
-
+        //spinners
         val spinner1 = findViewById<Spinner>(R.id.spinnerMedicineType)
         val options1 = listOf("Tablet/ Pill", "Syrup", "Drops", "Capsule")
         val adapter1 = ArrayAdapter(this, R.layout.spinner_item, options1)
@@ -161,7 +165,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-
+        //making the radiobutton radiobuttoning
         val radioEveryDay = findViewById<RadioButton>(R.id.radioEveryDay)
         val radioEveryWeek = findViewById<RadioButton>(R.id.radioEveryWeek)
         val radioEveryMonth = findViewById<RadioButton>(R.id.radioEveryMonth)
@@ -204,6 +208,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         }
     }
 
+    //time picker
     @SuppressLint("DefaultLocale")
     private fun showTimePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
@@ -219,6 +224,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         timePicker.show()
     }
 
+    //function to open the camera
     private fun openCamera() {
         val photoFile = File.createTempFile("profile_image", ".jpg", cacheDir)
         photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)

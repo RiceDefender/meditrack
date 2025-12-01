@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!--back button -->
+        <ImageView
+            android:id="@+id/backButton"
+            android:padding="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/baseline_arrow_back_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <!--header part -->
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/my_prescriptions"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toEndOf="@id/backButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/backButton"
+            android:layout_marginTop="20dp"
+            />
+
+        <View
+            android:id="@+id/firstPrescriptionBlock"
+            android:layout_height="90dp"
+            android:background="@color/my_meds"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView6"
+            android:layout_width="0dp"
+            android:layout_marginTop="39dp"
+            android:padding="12dp"/>
+
+
+        <ImageView
+            android:id="@+id/pictureMedicine1"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:contentDescription="@string/placeholder_pic"
+            app:layout_constraintStart_toStartOf="@id/firstPrescriptionBlock"
+            app:layout_constraintTop_toBottomOf="@id/textView6"
+            android:src="@drawable/profile_placeholder"
+            android:layout_marginTop="52dp"
+            android:layout_marginStart="12dp"/>
+
+
+        <TextView
+            android:id="@+id/nameMedicine1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/pictureMedicine1"
+            app:layout_constraintTop_toBottomOf="@id/textView6"
+            android:text="@string/paracetamol"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="52dp"/>
+
+
+        <View
+            android:id="@+id/divider1"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/nameMedicine1"
+            app:layout_constraintStart_toStartOf="@id/nameMedicine1"
+            app:layout_constraintEnd_toEndOf="@id/nameMedicine1"
+            android:layout_marginTop="5dp" />
+
+
+        <TextView
+            android:id="@+id/details1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/pictureMedicine1"
+            app:layout_constraintTop_toBottomOf="@id/divider1"
+            android:text="@string/_1_pill_every_day"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="5dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

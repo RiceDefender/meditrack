@@ -28,6 +28,7 @@
         </activity>
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".NewPrescriptionActivity" />
+        <activity android:name=".MyPrescriptionsActivity" />
 
 
         <provider

@@ -100,4 +100,6 @@
     <string name="medicine_2">Medicine #2</string>
     <string name="_200_mg">(200 mg)</string>
     <string name="_15_10_example">15:10</string>
+    <string name="my_prescriptions">My Prescriptions</string>
+    <string name="_1_pill_every_day">1 pill every day</string>
 </resources>

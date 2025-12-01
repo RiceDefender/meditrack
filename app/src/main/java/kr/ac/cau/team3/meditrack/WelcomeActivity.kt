@@ -6,6 +6,8 @@ import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.Button
+import android.view.View
+import android.app.AlertDialog
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,6 +24,10 @@ class WelcomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
+
+
+
+        //header stuff
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
         val menuIcon = findViewById<ImageView>(R.id.imageView)
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
@@ -51,12 +57,34 @@ class WelcomeActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_one -> {
+                    val intent = Intent(this, MyPrescriptionsActivity::class.java)
+                    startActivity(intent)
                     drawerLayout.closeDrawer(GravityCompat.END)
                     true
                 }
                 else -> false
             }
         }
+
+        //popup if press on a block
+        //if Yes -> changes block color to green
+        //if No -> keeps it gray until time passes and its too late = red
+        val blocSecond = findViewById<View>(R.id.blocSecond)
+
+        blocSecond.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Are you sure ?")
+            builder.setMessage("Confirm that you have taken your medicine ?")
+            builder.setNegativeButton("Yes") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+            builder.setPositiveButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+            builder.show()
+        }
+
 
 
         //Calendar
