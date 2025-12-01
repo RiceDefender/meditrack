@@ -13,15 +13,20 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+
+    <!--back button -->
     <ImageButton
         android:id="@+id/backButton"
+        android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/baseline_arrow_back_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!--header part (medicine pic) -->
 
     <TextView
         android:id="@+id/textView6"
@@ -68,6 +73,7 @@
 
         />
 
+    <!-- divider 1 -->
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
@@ -78,6 +84,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="32dp" />
 
+    <!-- medicine name + dates -->
 
     <TextView
         android:id="@+id/medicineName"
@@ -132,6 +139,8 @@
         app:layout_constraintTop_toTopOf="@id/startDate"
         android:layout_marginStart="48dp" />
 
+
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch1"
         android:text="@string/ongoing_treatment"
@@ -183,6 +192,9 @@
         app:layout_constraintTop_toTopOf="@id/editStartDate"
         app:layout_constraintStart_toStartOf="@id/endDate" />
 
+
+
+    <!-- divider 2 -->
     <View
         android:id="@+id/divider2"
         android:layout_width="0dp"
@@ -194,6 +206,7 @@
         android:layout_marginTop="20dp" />
 
 
+    <!--type  -->
     <TextView
         android:id="@+id/typeSelect"
         android:layout_width="wrap_content"
@@ -217,6 +230,8 @@
         app:layout_constraintWidth_percent="0.7"
         android:background="@color/green_700" />
 
+
+    <!-- divider 3 -->
     <View
         android:id="@+id/divider3"
         android:layout_width="0dp"
@@ -227,6 +242,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="20dp" />
 
+    <!-- dosage + unit -->
 
     <TextView
         android:id="@+id/dosageSelect"
@@ -282,6 +298,7 @@
        />
 
 
+    <!-- divider4 -->
     <View
         android:id="@+id/divider4"
         android:layout_width="0dp"
@@ -293,6 +310,7 @@
         android:layout_marginTop="32dp" />
 
 
+    <!-- frequency + times of the day -->
     <TextView
         android:id="@+id/frequencySelect"
         android:layout_width="wrap_content"
@@ -305,6 +323,8 @@
         app:layout_constraintTop_toBottomOf="@id/divider4"
         android:layout_marginTop="12dp"/>
 
+
+    <!-- radiobuttons of frequency -->
     <LinearLayout
         android:id="@+id/frequencyContainer"
         android:layout_marginTop="12dp"
@@ -497,6 +517,11 @@
 
 
 
+
+
+
+
+
     <TextView
         android:id="@+id/timesOfDay"
         android:layout_width="wrap_content"
@@ -511,13 +536,7 @@
 
 
 
-
-
-
-
-
-
-
+    <!-- check button of times of the day -->
     <LinearLayout
         android:id="@+id/timesOfDayContainer"
         android:layout_marginTop="12dp"
@@ -642,6 +661,8 @@
 
     </LinearLayout>
 
+
+    <!-- if pressed, saves the prescription & its info-->
     <ImageView
         android:id="@+id/confirmButton"
         android:layout_width="100dp"

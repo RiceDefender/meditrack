@@ -13,4 +13,7 @@
     <color name ="dark_green">#098F09</color>
     <color name = "menu_green">#53CA53</color>
     <color name = "hour_green">#079407</color>
+    <color name = "late_red">#FF6E6E</color>
+    <color name = "normal">#C2C2C2</color>
+    <color name = "taken_green">#A7F4A7</color>
 </resources>
