@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -86,6 +90,8 @@
         android:textStyle="bold"
         android:layout_marginTop="50dp"
         android:textSize="15sp"
-        android:textColor="#520082" />
+        android:textColor="#520082"
+        android:padding="20dp"/>
 
 </LinearLayout>
+</ScrollView>

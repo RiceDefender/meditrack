@@ -12,4 +12,5 @@
     <color name="green_800">#008F00</color>
     <color name ="dark_green">#098F09</color>
     <color name = "menu_green">#53CA53</color>
+    <color name = "hour_green">#079407</color>
 </resources>

@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -33,28 +32,34 @@ class WelcomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
         menuIcon.setOnClickListener {
             drawerLayout.openDrawer(GravityCompat.END)
         }
-
-
-        navigationView.setNavigationItemSelectedListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.nav_settings -> Toast.makeText(this, "Settings clicked", Toast.LENGTH_SHORT).show()
-            }
-            drawerLayout.closeDrawer(GravityCompat.END)
-            true
-        }
-
 
         val headerView = navigationView.getHeaderView(0)
         val closeButton = headerView.findViewById<ImageView>(R.id.closeButton)
         closeButton.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
         }
+        //menu button -> "new prescription" redirects to activity NewPrescription
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_two -> {
+                    val intent = Intent(this, NewPrescriptionActivity::class.java)
+                    startActivity(intent)
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                    true
+                }
+                R.id.nav_one -> {
+                    drawerLayout.closeDrawer(GravityCompat.END)
+                    true
+                }
+                else -> false
+            }
+        }
 
 
+        //Calendar
         val days = listOf(
             findViewById<LinearLayout>(R.id.day1),
             findViewById<LinearLayout>(R.id.day2),
@@ -66,9 +71,7 @@ class WelcomeActivity : AppCompatActivity() {
         )
 
         val calendar = Calendar.getInstance()
-        val today = Calendar.getInstance() // pour comparer
-
-
+        val today = Calendar.getInstance()
         val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
         val delta = if (dayOfWeek == Calendar.SUNDAY) -6 else Calendar.MONDAY - dayOfWeek
         calendar.add(Calendar.DAY_OF_MONTH, delta)
@@ -90,11 +93,10 @@ class WelcomeActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER
             }
 
-
             dayLayout.orientation = LinearLayout.VERTICAL
             dayLayout.gravity = Gravity.CENTER
 
-
+            //changing the color of the day of the week in black
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR)
                 && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
                 dayLayout.setBackgroundResource(R.drawable.circle_black)
@@ -106,11 +108,9 @@ class WelcomeActivity : AppCompatActivity() {
                 dayNumber.setTextColor(Color.BLACK)
             }
 
-
             dayLayout.removeAllViews()
             dayLayout.addView(dayName)
             dayLayout.addView(dayNumber)
-
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
     }
