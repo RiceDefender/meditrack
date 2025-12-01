@@ -22,10 +22,10 @@ import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationScheduler
 @TypeConverters(Converters::class) // Use your custom class here
 abstract class MeditrackDatabase : RoomDatabase() {
 
-    abstract fun UserDao(): UserDao
-    abstract fun MedicationDao(): MedicationDao
-    abstract fun MedicationSchedulerDao(): MedicationSchedulerDao
-    abstract fun MedicationIntakeLogDao(): MedicationIntakeLogDao
+    abstract fun userDao(): UserDao
+    abstract fun medicationDao(): MedicationDao
+    abstract fun medicationSchedulerDao(): MedicationSchedulerDao
+    abstract fun medicationIntakeLogDao(): MedicationIntakeLogDao
 
     companion object {
         @Volatile

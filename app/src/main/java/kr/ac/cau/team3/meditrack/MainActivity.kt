@@ -58,10 +58,10 @@ class MainActivity : AppCompatActivity() {
                     user_name = "TestUser_${System.currentTimeMillis()}", // Unique name
                     user_passwordhash = "secret_hash"
                 )
-                db.UserDao().upsert(testUser)
+                db.userDao().upsert(testUser)
 
                 // Fetch back to get the auto-generated ID
-                val savedUser = db.UserDao().getByName(testUser.user_name)
+                val savedUser = db.userDao().getByName(testUser.user_name)
 
                 if (savedUser == null) {
                     Log.e("DB_TEST", "Failed to save user!")
@@ -79,12 +79,12 @@ class MainActivity : AppCompatActivity() {
                     medication_weekdays = listOf(Weekday.Monday, Weekday.Wednesday),
                     medication_interval = null
                 )
-                db.MedicationDao().upsert(testMed)
+                db.medicationDao().upsert(testMed)
                 Log.d("DB_TEST", "Medication inserted.")
 
 
                 // STEP 3: Verify Data
-                val userMeds = db.MedicationDao().getMedicationsForUser(savedUser.user_id)
+                val userMeds = db.medicationDao().getMedicationsForUser(savedUser.user_id)
                 Log.d("DB_TEST", "--- Fetching Results ---")
                 Log.d("DB_TEST", "Found ${userMeds.size} medications for user ${savedUser.user_id}")
 
