@@ -105,4 +105,7 @@
     <string name="ongoing">Ongoing</string>
     <string name="_1_pill_every_week">1 pill every week</string>
     <string name="until_february_20th_2025">Until February 20th 2025</string>
+    <string name="todo">TODO</string>
+    <string name="new_prescription">+ New prescription</string>
+    <string name="my_prescription_s">My Prescription(s)</string>
 </resources>

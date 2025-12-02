@@ -2,7 +2,6 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -10,13 +9,14 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:padding="16dp">
 
 
     <!--back button -->
     <ImageView
         android:id="@+id/backButton"
+        android:contentDescription="@string/todo"
         android:padding="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -58,6 +58,7 @@
         android:id="@+id/addPhotoButton"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:contentDescription="@string/todo"
         android:src="@drawable/outline_add_a_photo_24"
         app:layout_constraintEnd_toStartOf="@id/profileImage"
         app:layout_constraintBottom_toBottomOf="@id/profileImage"
@@ -67,6 +68,7 @@
         android:id="@+id/importPhoto"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:contentDescription="@string/todo"
         android:src="@drawable/import_photo"
         app:layout_constraintStart_toEndOf="@id/profileImage"
         app:layout_constraintBottom_toBottomOf="@id/profileImage"
@@ -102,6 +104,7 @@
         android:id="@+id/editMedicineName"
         android:layout_width="200dp"
         android:layout_height="50dp"
+        android:autofillHints=""
         android:background="@color/green_700"
         android:ems="10"
         android:textSize="18sp"
@@ -162,6 +165,8 @@
 
     <EditText
         android:id="@+id/editStartDate"
+        android:autofillHints=""
+        android:inputType="date"
         android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -178,6 +183,7 @@
 
     <EditText
         android:id="@+id/editEndDate"
+        android:inputType="date"
         android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -272,6 +278,7 @@
         android:layout_marginTop="12dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:autofillHints=""
         android:hint="@string/input_number"
         android:textColorHint="#FFFFFF"
         android:inputType="number"
@@ -357,6 +364,7 @@
                 android:id="@+id/inputEveryDay"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:text="@string/_1"
                 android:inputType="number"
                 android:textColor="@color/white"
@@ -404,6 +412,7 @@
                 android:id="@+id/inputEveryWeek"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:text="@string/_1"
                 android:inputType="number"
                 android:textStyle="bold"
@@ -450,6 +459,7 @@
                 android:id="@+id/inputEveryMonth"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:text="@string/_1"
                 android:inputType="number"
                 android:textStyle="bold"
@@ -495,6 +505,7 @@
                 android:id="@+id/inputEveryYear"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:text="@string/_1"
                 android:inputType="number"
                 android:textStyle="bold"
@@ -649,6 +660,7 @@
                 android:id="@+id/editHour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:hint="@string/hh_mm"
                 android:textColorHint="@color/white"
                 android:inputType="number"
@@ -667,6 +679,7 @@
         android:id="@+id/confirmButton"
         android:layout_width="100dp"
         android:layout_height="100dp"
+        android:contentDescription="@string/todo"
         android:src="@drawable/confirm_button"
         app:layout_constraintTop_toBottomOf="@id/timesOfDayContainer"
         app:layout_constraintStart_toStartOf="parent"

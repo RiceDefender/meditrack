@@ -27,6 +27,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         }
     }
 
+    // open camera function
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
@@ -62,6 +63,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         importPhotoButton.setOnClickListener {
             pickImageLauncher.launch("image/*")
         }
+
         //button go back
         buttonGoBack.setOnClickListener {
             startActivity(Intent(this, WelcomeActivity::class.java))
@@ -126,17 +128,17 @@ class NewPrescriptionActivity : AppCompatActivity() {
 
         //if "add a custom time" button checked, we show the time picker
         val checkCustomTime = findViewById<CheckBox>(R.id.checkCustomTime)
-        val editHour2 = findViewById<EditText>(R.id.editHour)
+        val editHour = findViewById<EditText>(R.id.editHour)
 
 
-        editHour2.visibility = if (checkCustomTime.isChecked) View.VISIBLE else View.GONE
+        editHour.visibility = if (checkCustomTime.isChecked) View.VISIBLE else View.GONE
 
 
         checkCustomTime.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                editHour2.visibility = View.VISIBLE
+                editHour.visibility = View.VISIBLE
             } else {
-                editHour2.visibility = View.GONE
+                editHour.visibility = View.GONE
             }
         }
 
@@ -165,7 +167,8 @@ class NewPrescriptionActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        //making the radiobutton radiobuttoning
+        // This is for the RadioButton to work normally, meaning we can only
+        // choose a single one of them
         val radioEveryDay = findViewById<RadioButton>(R.id.radioEveryDay)
         val radioEveryWeek = findViewById<RadioButton>(R.id.radioEveryWeek)
         val radioEveryMonth = findViewById<RadioButton>(R.id.radioEveryMonth)
@@ -200,7 +203,8 @@ class NewPrescriptionActivity : AppCompatActivity() {
         }
 
 
-        val editHour = findViewById<EditText>(R.id.editHour)
+        //time picker
+
         editHour.isFocusable = false
         editHour.isClickable = true
         editHour.setOnClickListener {
@@ -208,7 +212,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         }
     }
 
-    //time picker
+
     @SuppressLint("DefaultLocale")
     private fun showTimePicker(editText: EditText) {
         val calendar = Calendar.getInstance()
@@ -223,6 +227,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         )
         timePicker.show()
     }
+
 
     //function to open the camera
     private fun openCamera() {

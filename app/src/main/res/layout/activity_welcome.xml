@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:text="@string/hello"
             android:textColor="#00B400"
             android:textSize="55sp"
@@ -53,6 +54,7 @@
         <!-- calendar on top -->
         <LinearLayout
             android:id="@+id/weekContainer"
+            android:baselineAligned="false"
             android:padding="16dp"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

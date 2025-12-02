@@ -10,6 +10,7 @@
         android:id="@+id/closeButton"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:contentDescription="@string/todo"
         android:src="@drawable/baseline_close_24"
         android:layout_marginTop="5dp"/>
 

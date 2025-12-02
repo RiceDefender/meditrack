@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="top|center_horizontal"
     android:paddingTop="100dp"
@@ -42,6 +41,7 @@
         android:layout_width="328dp"
         android:layout_height="46dp"
         android:layout_marginTop="30dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="textEmailAddress"
         android:textColorHint="#7ea481"
@@ -55,6 +55,7 @@
         android:layout_width="328dp"
         android:layout_height="46dp"
         android:layout_marginTop="18dp"
+        android:autofillHints=""
         android:ems="10"
         android:inputType="numberPassword"
         android:textColorHint="#7ea481"

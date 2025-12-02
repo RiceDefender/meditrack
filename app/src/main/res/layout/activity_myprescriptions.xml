@@ -16,6 +16,7 @@
         <!--back button -->
         <ImageView
             android:id="@+id/backButton"
+            android:contentDescription="@string/todo"
             android:padding="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,6 +159,7 @@
                     android:id="@+id/check1"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/check_logo"
                     android:padding="5dp"
                     android:layout_marginStart="10dp"/>
@@ -177,6 +179,7 @@
                     android:id="@+id/check2"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/check_logo"
                     android:padding="5dp"
                     android:layout_marginStart="10dp"/>
@@ -196,6 +199,7 @@
                     android:id="@+id/check3"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/check_logo"
                     android:padding="5dp"
                     android:layout_marginStart="10dp"/>
@@ -216,6 +220,7 @@
                     android:id="@+id/check4"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/check_logo"
                     android:padding="5dp"
                     android:layout_marginStart="10dp"/>
@@ -352,6 +357,7 @@
                     android:id="@+id/check1.2"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/check_logo"
                     android:padding="5dp"
                     android:layout_marginStart="10dp"/>
@@ -371,6 +377,7 @@
                     android:id="@+id/check2.2"
                     android:layout_width="25dp"
                     android:layout_height="wrap_content"
+                    android:contentDescription="@string/todo"
                     android:src="@drawable/check_logo"
                     android:padding="5dp"
                     android:layout_marginStart="10dp"/>

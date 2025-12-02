@@ -49,6 +49,7 @@ class WelcomeActivity : AppCompatActivity() {
         closeButton.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
         }
+
         //menu button -> "new prescription" redirects to activity NewPrescription
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -126,7 +127,7 @@ class WelcomeActivity : AppCompatActivity() {
             dayLayout.orientation = LinearLayout.VERTICAL
             dayLayout.gravity = Gravity.CENTER
 
-            //changing the color of the day of the week in black
+            //changing the color of today's day in black
             if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR)
                 && calendar.get(Calendar.DAY_OF_YEAR) == today.get(Calendar.DAY_OF_YEAR)) {
                 dayLayout.setBackgroundResource(R.drawable.circle_black)
