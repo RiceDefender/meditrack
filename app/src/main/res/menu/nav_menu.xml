@@ -2,11 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/nav_one"
-        android:title="My Prescription(s)"/>
+        android:title="My Prescription(s)" />
     <item
         android:id="@+id/nav_two"
-        android:title="New prescription"/>
-
+        android:title="+ New prescription"/>
 
 
 </menu>

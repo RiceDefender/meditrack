@@ -12,6 +12,7 @@
     android:paddingTop="100dp"
     android:background="@android:color/white">
 
+    <!--title header -->
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
@@ -21,6 +22,7 @@
         android:textColor="#00B400"
         android:textStyle="bold"
         android:gravity="center" />
+
 
     <TextView
         android:id="@+id/textView3"
@@ -34,6 +36,7 @@
         android:gravity="start"
         android:padding="32dp" />
 
+    <!--blocks login -->
     <EditText
         android:id="@+id/editTextTextEmailAddress"
         android:layout_width="328dp"

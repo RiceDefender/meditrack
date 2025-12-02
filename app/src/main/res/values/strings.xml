@@ -102,4 +102,7 @@
     <string name="_15_10_example">15:10</string>
     <string name="my_prescriptions">My Prescriptions</string>
     <string name="_1_pill_every_day">1 pill every day</string>
+    <string name="ongoing">Ongoing</string>
+    <string name="_1_pill_every_week">1 pill every week</string>
+    <string name="until_february_20th_2025">Until February 20th 2025</string>
 </resources>

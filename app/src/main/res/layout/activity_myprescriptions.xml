@@ -41,9 +41,11 @@
             android:layout_marginTop="20dp"
             />
 
+        <!--first medicine block -->
+
         <View
             android:id="@+id/firstPrescriptionBlock"
-            android:layout_height="90dp"
+            android:layout_height="110dp"
             android:background="@color/my_meds"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -102,6 +104,312 @@
             android:textStyle="bold"
             android:layout_marginStart="12dp"
             android:layout_marginTop="5dp"/>
+
+
+
+        <ImageView
+            android:id="@+id/deleteMedicine1"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/placeholder_pic"
+            app:layout_constraintEnd_toEndOf="@id/firstPrescriptionBlock"
+            app:layout_constraintTop_toBottomOf="@id/textView6"
+            android:src="@drawable/delete_logo"
+            android:layout_marginTop="40dp"
+            android:padding="5dp"
+            />
+
+
+        <ImageView
+            android:id="@+id/editMedicine1"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/placeholder_pic"
+            app:layout_constraintEnd_toStartOf="@id/deleteMedicine1"
+            app:layout_constraintTop_toBottomOf="@id/textView6"
+            android:src="@drawable/edit_logo"
+            android:layout_marginTop="40dp"
+            android:padding="5dp"
+            />
+
+        <!--this is a sub block (the white block) in which we can see
+         all the details of the prescription with scrolling on the right-->
+        <HorizontalScrollView
+            android:id="@+id/detailFirstPrescription"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bloc_details"
+            android:scrollbars="none"
+            app:layout_constraintStart_toEndOf="@id/pictureMedicine1"
+            app:layout_constraintEnd_toEndOf="@id/firstPrescriptionBlock"
+            app:layout_constraintTop_toBottomOf="@id/details1"
+            android:padding="5dp"
+            android:layout_marginEnd="5dp">
+
+            <LinearLayout
+                android:id="@+id/detailContentLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/check1"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/check_logo"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/timeExample1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/morning"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:id="@+id/check2"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/check_logo"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/timeExample2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/afternoon"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:id="@+id/check3"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/check_logo"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/timeExample3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_15_10_example"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"/>
+
+
+                <ImageView
+                    android:id="@+id/check4"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/check_logo"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/timeExample4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ongoing"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"/>
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+
+        <!--2nd medicine block -->
+        <View
+            android:id="@+id/secondPrescriptionBlock"
+            android:layout_height="110dp"
+            android:background="@color/my_meds"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/firstPrescriptionBlock"
+            android:layout_width="0dp"
+            android:layout_marginTop="39dp"
+            android:padding="12dp"/>
+
+
+        <ImageView
+            android:id="@+id/pictureMedicine2"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:contentDescription="@string/placeholder_pic"
+            app:layout_constraintStart_toStartOf="@id/secondPrescriptionBlock"
+            app:layout_constraintTop_toBottomOf="@id/firstPrescriptionBlock"
+            android:src="@drawable/profile_placeholder"
+            android:layout_marginTop="52dp"
+            android:layout_marginStart="12dp"/>
+
+
+        <TextView
+            android:id="@+id/nameMedicine2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/pictureMedicine1"
+            app:layout_constraintTop_toBottomOf="@id/firstPrescriptionBlock"
+            android:text="@string/medicine_2"
+            android:textColor="@android:color/black"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="52dp"/>
+
+
+        <View
+            android:id="@+id/divider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@color/gray"
+            app:layout_constraintTop_toBottomOf="@id/nameMedicine2"
+            app:layout_constraintStart_toStartOf="@id/nameMedicine2"
+            app:layout_constraintEnd_toEndOf="@id/nameMedicine2"
+            android:layout_marginTop="5dp" />
+
+
+        <TextView
+            android:id="@+id/details2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/pictureMedicine2"
+            app:layout_constraintTop_toBottomOf="@id/divider2"
+            android:text="@string/_1_pill_every_week"
+            android:textColor="@android:color/black"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="5dp"/>
+
+
+
+        <ImageView
+            android:id="@+id/deleteMedicine2"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/placeholder_pic"
+            app:layout_constraintEnd_toEndOf="@id/secondPrescriptionBlock"
+            app:layout_constraintTop_toBottomOf="@id/firstPrescriptionBlock"
+            android:src="@drawable/delete_logo"
+            android:layout_marginTop="40dp"
+            android:padding="5dp"
+            />
+
+
+        <ImageView
+            android:id="@+id/editMedicine2"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/placeholder_pic"
+            app:layout_constraintEnd_toStartOf="@id/deleteMedicine2"
+            app:layout_constraintTop_toBottomOf="@id/firstPrescriptionBlock"
+            android:src="@drawable/edit_logo"
+            android:layout_marginTop="40dp"
+            android:padding="5dp"
+            />
+
+        <!--this is a sub block (the white block) in which we can see
+         all the details of the prescription with scrolling on the right-->
+        <HorizontalScrollView
+            android:id="@+id/detailSecondPrescription"
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/bloc_details"
+            android:scrollbars="none"
+            app:layout_constraintStart_toEndOf="@id/pictureMedicine2"
+            app:layout_constraintEnd_toEndOf="@id/secondPrescriptionBlock"
+            app:layout_constraintTop_toBottomOf="@id/details2"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:id="@+id/detailContentLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/check1.2"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/check_logo"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"/>
+
+                <TextView
+                    android:id="@+id/timeExample1.2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/example_12_30"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"/>
+
+                <ImageView
+                    android:id="@+id/check2.2"
+                    android:layout_width="25dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/check_logo"
+                    android:padding="5dp"
+                    android:layout_marginStart="10dp"/>
+
+                <!--here is the ending date (unless its ongoing) -->
+                <TextView
+                    android:id="@+id/timeExample2.2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/until_february_20th_2025"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:textSize="11sp"
+                    android:layout_marginStart="6dp"
+                    android:layout_marginEnd="12dp"
+                    tools:ignore="HardcodedText"/>
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+
+
+        <!-- add a new prescription button -->
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:background="@color/dark_green"
+            android:padding="12dp"
+            android:text="@string/add_a_new_prescription"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/secondPrescriptionBlock"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="50dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

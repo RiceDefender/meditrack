@@ -32,6 +32,8 @@ class WelcomeActivity : AppCompatActivity() {
         val menuIcon = findViewById<ImageView>(R.id.imageView)
         val navigationView = findViewById<NavigationView>(R.id.navigation_view)
 
+
+        //buton newPrescriptionActivity
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
             val intent = Intent(this, NewPrescriptionActivity::class.java)
