@@ -18,6 +18,12 @@ class MeditrackViewModel(
     val users: StateFlow<List<User>> = _users
 
     suspend fun createUser(name: String, password: String): Int {
+        // Check if user exists first to avoid crash
+        val existingUser = repo.getUserByName(name)
+        if (existingUser != null) {
+            return -1 // Or throw exception
+        }
+
         val user = User(
             user_name = name,
             user_passwordhash = password.hashCode().toString()/*hashed password is stored in database*/
