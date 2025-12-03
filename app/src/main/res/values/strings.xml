@@ -108,4 +108,12 @@
     <string name="todo">TODO</string>
     <string name="new_prescription">+ New prescription</string>
     <string name="my_prescription_s">My Prescription(s)</string>
+    <string name="create_your_account">Create your Account</string>
+    <string name="username">Username *</string>
+    <string name="name">Name *</string>
+    <string name="email">Email *</string>
+    <string name="password_2">Password *</string>
+    <string name="confirm_password">Confirm Password *</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="show_password">Show password</string>
 </resources>
