@@ -10,25 +10,41 @@ class MeditrackRepository(
     private val db: MeditrackDatabase
 ) {
 
-    // --- Users ---
-    suspend fun insertUser(user: User) = db.userDao().upsert(user)
+    // USERS
+    suspend fun createUser(user : User): Int {
+        val newIdLong = db.userDao().upsert(user)
+        val newIdInt = newIdLong.toInt()
+
+        return newIdInt
+    }
+
     suspend fun getUserByName(name: String) = db.userDao().getByName(name)
 
-    // --- Medications ---
-    suspend fun insertMedication(medication: Medication) = db.medicationDao().upsert(medication)
+    // MEDICATIONS
+    suspend fun insertMedication(med: Medication): Int {
+        val newIdLong = db.medicationDao().upsert(med)
+        return newIdLong.toInt()
+    }
+
     suspend fun getMedicationsForUser(userId: Int) =
         db.medicationDao().getMedicationsForUser(userId)
 
-    // --- Schedulers ---
-    suspend fun insertScheduler(scheduler: MedicationScheduler) =
-        db.medicationSchedulerDao().upsert(scheduler)
+
+    // SCHEDULERS
+    suspend fun insertScheduler(sched: MedicationScheduler): Int {
+        val newIdLong = db.medicationSchedulerDao().upsert(sched)
+        return newIdLong.toInt()
+    }
 
     suspend fun getSchedulersForMed(medId: Int) =
         db.medicationSchedulerDao().getSchedules(medId)
 
-    // --- Intake Log ---
-    suspend fun logIntake(log: MedicationIntakeLog) =
-        db.medicationIntakeLogDao().upsert(log)
+
+    // LOGS
+    suspend fun logIntake(log: MedicationIntakeLog): Int {
+        val newIdLong = db.medicationIntakeLogDao().upsert(log)
+        return newIdLong.toInt()
+    }
 
     suspend fun getLogsForMed(medId: Int) =
         db.medicationIntakeLogDao().getIntakesForMedication(medId)

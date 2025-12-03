@@ -67,7 +67,7 @@ interface MedicationIntakeLogDao {
      * @param MedicationIntakeLog the MedicationIntakeLog to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(MedicationIntakeLog: MedicationIntakeLog)
+    suspend fun upsert(MedicationIntakeLog: MedicationIntakeLog) : Long
     /**
      * Insert or update MedicationIntakeLogs in the database. If a MedicationIntakeLog already exists, replace it.
      *
@@ -90,4 +90,5 @@ interface MedicationIntakeLogDao {
      */
     @Query("DELETE FROM medication_intake_log")
     suspend fun deleteAll()
+
 }

@@ -69,7 +69,7 @@ interface MedicationDao {
      * @param medication the medication to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(medication: Medication)
+    suspend fun upsert(medication: Medication) : Long
     /**
      * Insert or update medications in the database. If a medication already exists, replace it.
      *
@@ -92,4 +92,8 @@ interface MedicationDao {
      */
     @Query("DELETE FROM medication")
     suspend fun deleteAll()
+
+    /************************* LAST ADDED ID  *****************************/
+    @Query("SELECT last_insert_rowid()")
+    suspend fun getLastId(): Int
 }

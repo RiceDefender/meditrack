@@ -44,61 +44,6 @@ class MainActivity : AppCompatActivity() {
                 .setAnchorView(R.id.fab).show()
         }
 
-        // 2. Run the Test immediately on startup
-        runDatabaseSmokeTest()
-    }
-
-    private fun runDatabaseSmokeTest() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            Log.d("DB_TEST", "--- Starting Database Smoke Test ---")
-
-            try {
-                // STEP 1: Create & Insert User
-                val testUser = User(
-                    user_name = "TestUser_${System.currentTimeMillis()}", // Unique name
-                    user_passwordhash = "secret_hash"
-                )
-                db.userDao().upsert(testUser)
-
-                // Fetch back to get the auto-generated ID
-                val savedUser = db.userDao().getByName(testUser.user_name)
-
-                if (savedUser == null) {
-                    Log.e("DB_TEST", "Failed to save user!")
-                    return@launch
-                }
-                Log.d("DB_TEST", "User Saved: ID=${savedUser.user_id}, Name=${savedUser.user_name}")
-
-
-                // STEP 2: Create & Insert Medication linked to User
-                val testMed = Medication(
-                    medication_user_id = savedUser.user_id,
-                    medication_name = "Ibuprofen",
-                    medication_category = "Painkiller",
-                    medication_frequency = Frequency.Daily,
-                    medication_weekdays = listOf(Weekday.Monday, Weekday.Wednesday),
-                    medication_interval = null
-                )
-                db.medicationDao().upsert(testMed)
-                Log.d("DB_TEST", "Medication inserted.")
-
-
-                // STEP 3: Verify Data
-                val userMeds = db.medicationDao().getMedicationsForUser(savedUser.user_id)
-                Log.d("DB_TEST", "--- Fetching Results ---")
-                Log.d("DB_TEST", "Found ${userMeds.size} medications for user ${savedUser.user_id}")
-
-                userMeds.forEach { med ->
-                    Log.d("DB_TEST", "READ: ${med.medication_name} (Freq: ${med.medication_frequency})")
-                    Log.d("DB_TEST", "DAYS: ${med.medication_weekdays}")
-                }
-
-            } catch (e: Exception) {
-                Log.e("DB_TEST", "CRASH DURING TEST", e)
-            }
-
-            Log.d("DB_TEST", "--- End of Test ---")
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

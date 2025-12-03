@@ -57,7 +57,7 @@ interface UserDao {
      * @param user the user to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(user: User)
+    suspend fun upsert(user: User) : Long
     /**
      * Insert or update users in the database. If a user already exists, replace it.
      *
