@@ -11,21 +11,36 @@ import android.app.AlertDialog
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.google.android.material.navigation.NavigationView
+import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
+import kr.ac.cau.team3.meditrack.viewmodel.GenericViewModelFactory
+import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import kotlin.getValue
 
 class WelcomeActivity : AppCompatActivity() {
+
+    private lateinit var repository: MeditrackRepository
+    private val vm: MeditrackViewModel by viewModels {
+        GenericViewModelFactory { MeditrackViewModel(repository) }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
 
-
-
+        // linking to database
+        repository = MeditrackRepository(
+            MeditrackDatabase.getDatabase(this)
+        )
+        val userId = intent.getIntExtra("USER_ID", -1)
+        val userName = intent.getIntExtra("USER_NAME", -1)
 
         //header stuff
         val drawerLayout = findViewById<DrawerLayout>(R.id.drawer_layout)
@@ -37,6 +52,8 @@ class WelcomeActivity : AppCompatActivity() {
         val button = findViewById<Button>(R.id.button)
         button.setOnClickListener {
             val intent = Intent(this, NewPrescriptionActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("USER_Name", userName)
             startActivity(intent)
         }
 
@@ -55,12 +72,16 @@ class WelcomeActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_two -> {
                     val intent = Intent(this, NewPrescriptionActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    intent.putExtra("USER_Name", userName)
                     startActivity(intent)
                     drawerLayout.closeDrawer(GravityCompat.END)
                     true
                 }
                 R.id.nav_one -> {
                     val intent = Intent(this, MyPrescriptionsActivity::class.java)
+                    intent.putExtra("USER_ID", userId)
+                    intent.putExtra("USER_Name", userName)
                     startActivity(intent)
                     drawerLayout.closeDrawer(GravityCompat.END)
                     true

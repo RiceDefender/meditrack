@@ -59,7 +59,7 @@ class SignUpActivity : AppCompatActivity() {
 
                 Toast.makeText(
                     this@SignUpActivity,
-                    "Account created! Your ID = $id",
+                    "Account created! You can now login",
                     Toast.LENGTH_SHORT
                 ).show()
 

@@ -283,8 +283,6 @@
         android:textColorHint="#FFFFFF"
         android:inputType="number"
         android:textColor="#FFFFFF"
-        android:focusable="false"
-        android:clickable="true"
         android:padding="12dp"
         android:background="@color/green_700"
         app:layout_constraintTop_toBottomOf="@id/dosageSelect"
@@ -675,7 +673,7 @@
 
 
     <!-- if pressed, saves the prescription & its info-->
-    <ImageView
+    <ImageButton
         android:id="@+id/confirmButton"
         android:layout_width="100dp"
         android:layout_height="100dp"

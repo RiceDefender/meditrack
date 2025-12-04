@@ -43,7 +43,11 @@ class MainActivity : AppCompatActivity() {
                 val user = vm.loginUserByName(name, password)
 
                 if (user != null) {
-                    startActivity(Intent(this@MainActivity, WelcomeActivity::class.java))
+                    // Send userId to next activity
+                    val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
+                    intent.putExtra("USER_ID", user.user_id)
+                    intent.putExtra("USER_Name", user.user_name)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(
                         this@MainActivity,

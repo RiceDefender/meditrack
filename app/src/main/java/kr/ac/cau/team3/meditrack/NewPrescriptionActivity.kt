@@ -15,8 +15,23 @@ import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.view.View
 import android.widget.AdapterView
+import androidx.activity.viewModels
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Frequency
+import kr.ac.cau.team3.meditrack.data.source.local.entities.TimeOfDay
+import kr.ac.cau.team3.meditrack.viewmodel.GenericViewModelFactory
+import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
+import java.time.LocalTime
+import kotlin.getValue
 
 class NewPrescriptionActivity : AppCompatActivity() {
+
+    private lateinit var repository: MeditrackRepository
+    private val vm: MeditrackViewModel by viewModels {
+        GenericViewModelFactory { MeditrackViewModel(repository) }
+    }
 
     private lateinit var profileImage: ImageView
     private lateinit var photoUri: Uri
@@ -47,7 +62,11 @@ class NewPrescriptionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_prescription)
 
-
+        // linking to database
+        repository = MeditrackRepository(
+            MeditrackDatabase.getDatabase(this)
+        )
+        val userId = intent.getIntExtra("USER_ID", -1)
 
 
         //importing the photo
@@ -126,14 +145,15 @@ class NewPrescriptionActivity : AppCompatActivity() {
             datePicker.show()
         }
 
+        // checkbox for the times of the day multiple can be chosen
+        val checMorning = findViewById<CheckBox>(R.id.checkMorning)
+        val checkAfternoon = findViewById<CheckBox>(R.id.checkAfternoon)
+        val checkEvening = findViewById<CheckBox>(R.id.checkEvening)
         //if "add a custom time" button checked, we show the time picker
         val checkCustomTime = findViewById<CheckBox>(R.id.checkCustomTime)
         val editHour = findViewById<EditText>(R.id.editHour)
 
-
         editHour.visibility = if (checkCustomTime.isChecked) View.VISIBLE else View.GONE
-
-
         checkCustomTime.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 editHour.visibility = View.VISIBLE
@@ -141,10 +161,6 @@ class NewPrescriptionActivity : AppCompatActivity() {
                 editHour.visibility = View.GONE
             }
         }
-
-
-
-
 
         //spinners
         val spinner1 = findViewById<Spinner>(R.id.spinnerMedicineType)
@@ -173,6 +189,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
         val radioEveryWeek = findViewById<RadioButton>(R.id.radioEveryWeek)
         val radioEveryMonth = findViewById<RadioButton>(R.id.radioEveryMonth)
         val radioEveryYear = findViewById<RadioButton>(R.id.radioEveryYear)
+        var selectFrequency = radioEveryDay// we need to get the frequency first
 
         radioEveryDay.setOnClickListener {
             radioEveryDay.isChecked = true
@@ -203,12 +220,80 @@ class NewPrescriptionActivity : AppCompatActivity() {
         }
 
 
+
         //time picker
 
         editHour.isFocusable = false
         editHour.isClickable = true
         editHour.setOnClickListener {
             showTimePicker(editHour)
+        }
+
+        val saveButton = findViewById<ImageButton>(R.id.confirmButton)
+        saveButton.setOnClickListener {
+
+            val name = findViewById<EditText>(R.id.editMedicineName).text.toString()
+            val category = spinner1.selectedItem.toString()
+            val frequency = when (selectFrequency) {
+                radioEveryDay -> Frequency.Daily
+                radioEveryWeek -> {
+                    Frequency.Weekdays
+                }
+                radioEveryMonth -> {
+                    Frequency.Interval
+                }
+                radioEveryYear -> {
+                    Frequency.Interval
+                }
+                else -> {
+                    Frequency.Daily
+                }
+            }
+            val dosage = findViewById<EditText>(R.id.editDosage).text.toString() +
+                    spinner2.selectedItem.toString()
+
+            // Collect times
+            val times = mutableListOf<Pair<LocalTime, TimeOfDay>>()
+
+            if (checMorning.isChecked) {
+                times.add(LocalTime.of(8, 0) to TimeOfDay.Morning)
+            }
+            if (checkAfternoon.isChecked) {
+                times.add(LocalTime.of(13, 0) to TimeOfDay.Afternoon)
+            }
+            if (checkEvening.isChecked) {
+                times.add(LocalTime.of(19, 0) to TimeOfDay.Evening)
+            }
+            if (checkCustomTime.isChecked) {
+                val customTime = LocalTime.parse(editHour.text.toString())
+                times.add(customTime to TimeOfDay.Custom)
+            }
+
+            lifecycleScope.launch {
+
+                // Insert medication
+                val medId = vm.addMedication(
+                    medication_user_id = userId,
+                    medication_name = name,
+                    medication_category = category,
+                    medication_frequency = frequency,
+                    medication_weekdays = null,
+                    medication_interval = null
+                )
+
+                // 3️⃣ Insert ALL schedulers
+                times.forEach { (time, timeOfDay) ->
+                    vm.addSchedule(
+                        medId = medId,
+                        time = time,
+                        timeOfDay = timeOfDay,
+                        dosage = dosage
+                    )
+                }
+
+                // 4️⃣ Navigate
+                startActivity(Intent(this@NewPrescriptionActivity, MyPrescriptionsActivity::class.java))
+            }
         }
     }
 

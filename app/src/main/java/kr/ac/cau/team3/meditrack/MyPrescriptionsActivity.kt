@@ -6,13 +6,29 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
+import kr.ac.cau.team3.meditrack.viewmodel.GenericViewModelFactory
+import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
+import kotlin.getValue
 
 class MyPrescriptionsActivity : AppCompatActivity() {
+
+    private lateinit var repository: MeditrackRepository
+    private val vm: MeditrackViewModel by viewModels {
+        GenericViewModelFactory { MeditrackViewModel(repository) }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_myprescriptions)
+
+        // linking to database
+        repository = MeditrackRepository(
+            MeditrackDatabase.getDatabase(this)
+        )
+        val userId = intent.getIntExtra("USER_ID", -1)
 
         val buttonGoBack = findViewById<ImageView>(R.id.backButton)
         buttonGoBack.setOnClickListener {
