@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
 import kr.ac.cau.team3.meditrack.data.source.local.entities.*
-import kr.ac.cau.team3.meditrack.MeditrackViewModel
+import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
 import java.time.LocalTime
 
 class TestViewModelActivity : ComponentActivity() {

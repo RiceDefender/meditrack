@@ -1,11 +1,18 @@
-package kr.ac.cau.team3.meditrack
-
-import java.sql.Timestamp
+package kr.ac.cau.team3.meditrack.viewmodel
 
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kr.ac.cau.team3.meditrack.data.source.local.entities.*
+import kr.ac.cau.team3.meditrack.MeditrackRepository
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Frequency
+import kr.ac.cau.team3.meditrack.data.source.local.entities.IntakeStatus
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Medication
+import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationIntakeLog
+import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationScheduler
+import kr.ac.cau.team3.meditrack.data.source.local.entities.TimeOfDay
+import kr.ac.cau.team3.meditrack.data.source.local.entities.User
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Weekday
+import java.sql.Timestamp
 import java.time.LocalTime
 
 class MeditrackViewModel(
@@ -26,7 +33,8 @@ class MeditrackViewModel(
 
         val user = User(
             user_name = name,
-            user_passwordhash = password.hashCode().toString()/*hashed password is stored in database*/
+            user_passwordhash = password.hashCode()
+                .toString()/*hashed password is stored in database*/
         )
         val id = repo.createUser(user)
         _users.value = listOfNotNull(repo.getUserByName(name))
