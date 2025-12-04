@@ -52,7 +52,7 @@ interface MedicationSchedulerDao {
      * @param MedicationScheduler the MedicationScheduler to be inserted or updated.
      */
     @Upsert
-    suspend fun upsert(MedicationScheduler: MedicationScheduler)
+    suspend fun upsert(MedicationScheduler: MedicationScheduler) : Long
     /**
      * Insert or update MedicationSchedulers in the database. If a MedicationScheduler already exists, replace it.
      *
