@@ -21,6 +21,7 @@ import kotlinx.coroutines.launch
 import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
 import kr.ac.cau.team3.meditrack.data.source.local.entities.Frequency
 import kr.ac.cau.team3.meditrack.data.source.local.entities.TimeOfDay
+import kr.ac.cau.team3.meditrack.data.source.local.entities.Weekday
 import kr.ac.cau.team3.meditrack.viewmodel.GenericViewModelFactory
 import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
 import java.time.LocalTime
@@ -219,7 +220,30 @@ class NewPrescriptionActivity : AppCompatActivity() {
             radioEveryYear.isChecked = true
         }
 
+        // weekday thing
+        val weekdaysLayout = findViewById<LinearLayout>(R.id.weekdaysLayout)
+        radioEveryWeek.setOnClickListener {
+            radioEveryDay.isChecked = false
+            radioEveryWeek.isChecked = true
+            radioEveryMonth.isChecked = false
+            radioEveryYear.isChecked = false
 
+            weekdaysLayout.visibility = View.VISIBLE   // SHOW weekdays
+        }
+        radioEveryDay.setOnClickListener {
+            radioEveryDay.isChecked = true
+            radioEveryWeek.isChecked = false
+            radioEveryMonth.isChecked = false
+            radioEveryYear.isChecked = false
+
+            weekdaysLayout.visibility = View.GONE      // HIDE weekdays
+        }
+        radioEveryMonth.setOnClickListener {
+            weekdaysLayout.visibility = View.GONE
+        }
+        radioEveryYear.setOnClickListener {
+            weekdaysLayout.visibility = View.GONE
+        }
 
         //time picker
 
@@ -234,27 +258,17 @@ class NewPrescriptionActivity : AppCompatActivity() {
 
             val name = findViewById<EditText>(R.id.editMedicineName).text.toString()
             val category = spinner1.selectedItem.toString()
-            val frequency = when (selectFrequency) {
-                radioEveryDay -> Frequency.Daily
-                radioEveryWeek -> {
-                    Frequency.Weekdays
-                }
-                radioEveryMonth -> {
-                    Frequency.Interval
-                }
-                radioEveryYear -> {
-                    Frequency.Interval
-                }
-                else -> {
-                    Frequency.Daily
-                }
-            }
-            val dosage = findViewById<EditText>(R.id.editDosage).text.toString() +
+            val frequency = getSelectedFrequency()
+            val dosage = findViewById<EditText>(R.id.editDosage).text.toString() + " " +
                     spinner2.selectedItem.toString()
+            val weekdays : List<Weekday>? = getSelectedWeekdays()
+            val interval = getSelectedInterval(frequency)
+            if ( frequency == Frequency.Weekly && (weekdays == null || weekdays.size != interval)) {
+                // Handle invalid input
+                return@setOnClickListener
+            }
 
-            // Collect times
             val times = mutableListOf<Pair<LocalTime, TimeOfDay>>()
-
             if (checMorning.isChecked) {
                 times.add(LocalTime.of(8, 0) to TimeOfDay.Morning)
             }
@@ -277,11 +291,10 @@ class NewPrescriptionActivity : AppCompatActivity() {
                     medication_name = name,
                     medication_category = category,
                     medication_frequency = frequency,
-                    medication_weekdays = null,
-                    medication_interval = null
+                    medication_weekdays = weekdays,
+                    medication_interval = interval
                 )
 
-                // 3️⃣ Insert ALL schedulers
                 times.forEach { (time, timeOfDay) ->
                     vm.addSchedule(
                         medId = medId,
@@ -291,7 +304,6 @@ class NewPrescriptionActivity : AppCompatActivity() {
                     )
                 }
 
-                // 4️⃣ Navigate
                 startActivity(Intent(this@NewPrescriptionActivity, MyPrescriptionsActivity::class.java))
             }
         }
@@ -320,4 +332,40 @@ class NewPrescriptionActivity : AppCompatActivity() {
         photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)
         takePhotoLauncher.launch(photoUri)
     }
+
+    private fun getSelectedWeekdays(): List<Weekday>? {
+        val days = mutableListOf<Weekday>()
+
+        if (findViewById<CheckBox>(R.id.checkMon).isChecked)    days.add(Weekday.Monday)
+        if (findViewById<CheckBox>(R.id.checkTue).isChecked)   days.add(Weekday.Tuesday)
+        if (findViewById<CheckBox>(R.id.checkWed).isChecked) days.add(Weekday.Wednesday)
+        if (findViewById<CheckBox>(R.id.checkThu).isChecked)  days.add(Weekday.Thursday)
+        if (findViewById<CheckBox>(R.id.checkFri).isChecked)    days.add(Weekday.Friday)
+        if (findViewById<CheckBox>(R.id.checkSat).isChecked)  days.add(Weekday.Saturday)
+        if (findViewById<CheckBox>(R.id.checkSun).isChecked)    days.add(Weekday.Sunday)
+
+        return if (days.isEmpty()) null else days
+    }
+
+    private fun getSelectedFrequency(): Frequency {
+        return when {
+            findViewById<RadioButton>(R.id.radioEveryDay).isChecked -> Frequency.Daily
+            findViewById<RadioButton>(R.id.radioEveryWeek).isChecked -> Frequency.Weekly
+            findViewById<RadioButton>(R.id.radioEveryMonth).isChecked -> Frequency.Monthly
+            findViewById<RadioButton>(R.id.radioEveryYear).isChecked -> Frequency.Yearly
+            else -> Frequency.Daily
+        }
+    }
+
+    private fun getSelectedInterval(freq: Frequency): Int? {
+        return when {
+            freq == Frequency.Daily -> null
+            freq == Frequency.Weekly -> findViewById<EditText>(R.id.inputEveryWeek).text.toString().toIntOrNull()
+            freq == Frequency.Monthly -> findViewById<EditText>(R.id.inputEveryMonth).text.toString().toIntOrNull()
+            freq == Frequency.Yearly -> findViewById<EditText>(R.id.inputEveryYear).text.toString().toIntOrNull()
+            else -> null
+        }
+    }
+
+
 }

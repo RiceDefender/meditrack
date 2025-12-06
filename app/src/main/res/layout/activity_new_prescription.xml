@@ -353,34 +353,10 @@
                 android:id="@+id/radioEveryDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/every2"
+                android:text="@string/day_s"
                 app:buttonTint="@color/white"
                 android:textSize="18sp"
                 android:textColor="@color/white"/>
-
-            <EditText
-                android:id="@+id/inputEveryDay"
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:text="@string/_1"
-                android:inputType="number"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:background="@android:color/transparent"
-                android:layout_marginStart="4dp"
-                android:padding="10dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/day_s"
-                android:textSize="18sp"
-                android:textColor="@color/white"
-                android:paddingStart="4dp"
-                android:paddingEnd="10dp"/>
-
-
         </LinearLayout>
 
         <View
@@ -401,7 +377,7 @@
                 android:id="@+id/radioEveryWeek"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/every2"
+                android:text="@string/week_s"
                 app:buttonTint="@color/white"
                 android:textSize="18sp"
                 android:textColor="@color/white"/>
@@ -422,11 +398,55 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/week_s"
+                android:text="@string/times"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:paddingStart="4dp"
                 android:paddingEnd="10dp"/>
+        </LinearLayout>
+        <!-- check buttons of weekdays -->
+         <LinearLayout
+            android:id="@+id/weekdaysLayout"
+            android:visibility="gone"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <CheckBox
+                android:id="@+id/checkMon"
+                android:text="Mon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/checkTue"
+                android:text="Tue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/checkWed"
+                android:text="Wed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/checkThu"
+                android:text="Thu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/checkFri"
+                android:text="Fri"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/checkSat"
+                android:text="Sat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <CheckBox
+                android:id="@+id/checkSun"
+                android:text="Sun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <View
@@ -435,7 +455,6 @@
             android:background="@color/white"
             android:layout_marginVertical="4dp"
             />
-
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -448,7 +467,7 @@
                 android:id="@+id/radioEveryMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/every2"
+                android:text="@string/month_s"
                 app:buttonTint="@color/white"
                 android:textSize="18sp"
                 android:textColor="@color/white"/>
@@ -469,7 +488,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/month_s"
+                android:text="@string/times"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:paddingStart="4dp"
@@ -494,7 +513,7 @@
                 android:id="@+id/radioEveryYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/every2"
+                android:text="@string/year_s"
                 app:buttonTint="@color/white"
                 android:textSize="18sp"
                 android:textColor="@color/white"/>
@@ -515,13 +534,19 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/year_s"
+                android:text="@string/times"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 android:paddingStart="4dp"
                 android:paddingEnd="10dp"/>
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/white"
+            android:layout_marginVertical="4dp"
+            />
     </LinearLayout>
 
 
