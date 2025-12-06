@@ -14,6 +14,8 @@ import kr.ac.cau.team3.meditrack.data.source.local.entities.User
 import kr.ac.cau.team3.meditrack.data.source.local.entities.Weekday
 import java.sql.Timestamp
 import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class MeditrackViewModel(
     private val repo: MeditrackRepository
@@ -127,18 +129,29 @@ class MeditrackViewModel(
         takenTime: Timestamp?,
         status: IntakeStatus
     ): Int {
-
         val log = MedicationIntakeLog(
             mil_ms_id = scheduleId,
             mil_scheduled_time = scheduledTime,
             mil_taken_time = takenTime,
-            mil_status = status
+            mil_status = status,
+            mil_date = timestampToMilDate(Timestamp(System.currentTimeMillis()))
         )
 
         return repo.logIntake(log)
+    }
+    suspend fun isIntakeLogged(msId: Int, date: String): Boolean {
+        return repo.isIntakeLogged(msId, date)
     }
 
     suspend fun loadLogsForMed(medId: Int): List<MedicationIntakeLog> {
         return repo.getLogsForMed(medId)
     }
+}
+
+// Helper function for date format
+fun timestampToMilDate(timestamp: Timestamp): String {
+    val instant = timestamp.toInstant()
+    val zonedDateTime = instant.atZone(ZoneId.systemDefault())
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    return zonedDateTime.toLocalDate().format(formatter)
 }

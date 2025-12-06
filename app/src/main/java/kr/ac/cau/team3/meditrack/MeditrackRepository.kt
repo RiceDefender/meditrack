@@ -1,10 +1,14 @@
 package kr.ac.cau.team3.meditrack
 
 import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
+import kr.ac.cau.team3.meditrack.data.source.local.entities.IntakeStatus
 import kr.ac.cau.team3.meditrack.data.source.local.entities.Medication
 import kr.ac.cau.team3.meditrack.data.source.local.entities.User
 import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationScheduler
 import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationIntakeLog
+import kr.ac.cau.team3.meditrack.viewmodel.timestampToMilDate
+import java.sql.Timestamp
+import java.time.LocalTime
 
 class MeditrackRepository(
     private val db: MeditrackDatabase
@@ -50,4 +54,20 @@ class MeditrackRepository(
 
     suspend fun getLogsForMed(medId: Int) =
         db.medicationIntakeLogDao().getIntakesForMedication(medId)
+
+    suspend fun logIntakeTaken(msId: Int, scheduledTime: LocalTime): Long {
+        val logEntry = MedicationIntakeLog(
+            mil_ms_id = msId,
+            mil_scheduled_time = scheduledTime,
+            mil_taken_time = Timestamp(System.currentTimeMillis()),
+            mil_status = IntakeStatus.TAKEN,
+            mil_date = timestampToMilDate(Timestamp(System.currentTimeMillis())) // *** Saving the date ***
+        )
+        return db.medicationIntakeLogDao().upsert(logEntry)
+    }
+
+    suspend fun isIntakeLogged(msId: Int, date: String): Boolean {
+        return db.medicationIntakeLogDao().getIntakeLogByScheduleAndDate(msId, date) != null
+    }
+
 }

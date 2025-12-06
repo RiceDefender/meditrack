@@ -27,7 +27,12 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.app.AlertDialog
-import android.util.Log // Used for debugging
+import android.util.Log
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import android.util.TypedValue // Used for dpToPx extension function
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -46,17 +51,16 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Linking to database
         repository = MeditrackRepository(
-            MeditrackDatabase.getDatabase(this) // Make sure MeditrackDatabase.getDatabase(this) is correctly implemented
+            MeditrackDatabase.getDatabase(this)
         )
 
         // Get user data
         userId = intent.getIntExtra("USER_ID", -1)
-        userName = intent.getStringExtra("USER_NAME") // Assuming this is now correctly passed as a String
+        userName = intent.getStringExtra("USER_NAME")
 
         // Check if userId is valid before proceeding
         if (userId == -1) {
             Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_LONG).show()
-            // redirect to login screen
             finish()
             return
         }
@@ -116,8 +120,28 @@ class WelcomeActivity : AppCompatActivity() {
         loadAndDisplayTodaySchedule()
     }
 
+    // --- NEW HELPER FUNCTION FOR DATE CONVERSION ---
+    /**
+     * Converts a Timestamp to the "YYYY-MM-DD" date string required for mil_date.
+     */
+    private fun timestampToMilDate(timestamp: Timestamp): String {
+        // Use Java Time API for modern, reliable conversion
+        return timestamp.toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate()
+            .format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    }
+
+    /**
+     * Gets today's date in the "YYYY-MM-DD" string format.
+     */
+    private fun getTodayDateString(): String {
+        return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+    }
+
+    // --- Existing setupCalendarDisplay function remains the same ---
     private fun setupCalendarDisplay() {
-        // ... (Calendar UI logic remains the same) ...
+        // Calendar UI logic remains the same
         val days = listOf(
             findViewById<LinearLayout>(R.id.day1),
             findViewById<LinearLayout>(R.id.day2),
@@ -173,13 +197,11 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
+
     private fun loadAndDisplayTodaySchedule() {
         if (userId == -1) return
 
         lifecycleScope.launch {
-            // 1. Load all medications for the user
-            val medications = vm.loadMedicationsForUser(userId)
-
             // Determine today's Weekday enum for filtering
             val todayCalendar = Calendar.getInstance()
             val todayDayOfWeek = when (todayCalendar.get(Calendar.DAY_OF_WEEK)) {
@@ -197,20 +219,20 @@ class WelcomeActivity : AppCompatActivity() {
             // Clear previous blocks
             scheduleContainer.removeAllViews()
 
+            val medications = vm.loadMedicationsForUser(userId)
             val todayScheduleList = mutableListOf<Pair<Medication, MedicationScheduler>>()
 
             for (medication in medications) {
-                // Check if the medication is scheduled for today
+                // filtering logic remains the same
                 val isScheduledToday = when (medication.medication_frequency) {
                     Frequency.Daily -> true
                     Frequency.Weekly -> medication.medication_weekdays?.contains(todayDayOfWeek) == true
-                    Frequency.Monthly -> true // Simplified: Assume interval logic is complex and always show for now
-                    Frequency.Yearly -> true // Simplified: Assume interval logic is complex and always show for now
+                    Frequency.Monthly -> true
+                    Frequency.Yearly -> true
                     else -> false
                 }
 
                 if (isScheduledToday) {
-                    // 2. Load schedules for the current medication
                     val schedules = vm.loadSchedules(medication.medication_id)
                     schedules.forEach { schedule ->
                         todayScheduleList.add(Pair(medication, schedule))
@@ -219,9 +241,13 @@ class WelcomeActivity : AppCompatActivity() {
             }
 
             // Sort all schedules by time
-            val sortedScheduleList = todayScheduleList.sortedBy { it.second.ms_scheduled_time }
+            val sortedScheduleList = todayScheduleList.sortedBy {
+                // Convert LocalTime to Comparable
+                it.second.ms_scheduled_time
+            }
 
             for ((medication, schedule) in sortedScheduleList) {
+                // Pass the schedule to the block creation function
                 createMedicationBlock(medication, schedule)
             }
 
@@ -244,20 +270,39 @@ class WelcomeActivity : AppCompatActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                setMargins(0, 8.dpToPx(), 0, 8.dpToPx()) // Add vertical spacing
+                setMargins(0, 8.dpToPx(), 0, 8.dpToPx())
             }
             orientation = LinearLayout.HORIZONTAL
-            // Default background is gray/pending
-            setBackgroundResource(R.drawable.bloc_normal_bg)
+            // Set padding
             setPadding(16.dpToPx(), 16.dpToPx(), 16.dpToPx(), 16.dpToPx())
+        }
+
+        // --- Persistent Status Check ---
+        lifecycleScope.launch {
+            val todayDate = getTodayDateString()
+            // Check if this specific schedule has a log entry for today
+            val isTaken = vm.isIntakeLogged(schedule.ms_id, todayDate)
+
+            // Determine initial background color
+            if (isTaken) {
+                blockLayout.setBackgroundResource(R.drawable.bloc_taken_bg) // Green/Taken
+            } else {
+                // Check if the scheduled time has passed (Missed vs. Pending)
+                val scheduledTime = LocalTime.of(schedule.ms_scheduled_time.hour, schedule.ms_scheduled_time.minute)
+                val isMissed = scheduledTime.isBefore(LocalTime.now())
+
+                if (isMissed) {
+                    blockLayout.setBackgroundResource(R.drawable.bloc_late_bg) // Red/Missed (You need to define this drawable)
+                } else {
+                    blockLayout.setBackgroundResource(R.drawable.bloc_normal_bg) // Gray/Pending
+                }
+            }
         }
 
         // Left side: Time
         val timeTextView = TextView(this).apply {
             // Correctly format LocalTime to string
-            val hour = schedule.ms_scheduled_time.hour
-            val minute = schedule.ms_scheduled_time.minute
-            val formattedTime = String.format(Locale.getDefault(), "%d:%02d", hour, minute)
+            val formattedTime = String.format(Locale.getDefault(), "%d:%02d", schedule.ms_scheduled_time.hour, schedule.ms_scheduled_time.minute)
 
             text = formattedTime
             textSize = 18f
@@ -292,7 +337,15 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Set click listener with AlertDialog
         blockLayout.setOnClickListener {
-            showConfirmationDialog(blockLayout, schedule)
+            // Only show confirmation if not already taken
+            lifecycleScope.launch {
+                val isTaken = vm.isIntakeLogged(schedule.ms_id, getTodayDateString())
+                if (!isTaken) {
+                    showConfirmationDialog(blockLayout, schedule)
+                } else {
+                    Toast.makeText(this@WelcomeActivity, "Medication already logged as taken today.", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         scheduleContainer.addView(blockLayout)
@@ -301,19 +354,20 @@ class WelcomeActivity : AppCompatActivity() {
     private fun showConfirmationDialog(blockView: View, schedule: MedicationScheduler) {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Confirm Intake")
-        builder.setMessage("Confirm that you have taken your medicine (${schedule.ms_dosage}) scheduled for ${schedule.ms_scheduled_time}?")
+        builder.setMessage("Confirm that you have taken your medicine (${schedule.ms_dosage}) scheduled for ${String.format(Locale.getDefault(), "%d:%02d", schedule.ms_scheduled_time.hour, schedule.ms_scheduled_time.minute)}?")
 
         // "Yes" Button (Mark as Taken)
         builder.setPositiveButton("Yes") { dialog, _ ->
             lifecycleScope.launch {
                 val takenTime = Timestamp(System.currentTimeMillis())
+                val todayDate = getTodayDateString() // Get today's date string
 
-                // Log the intake as TAKEN
+                // Log the intake as TAKEN, including the date string
                 val logId = vm.addLog(
                     scheduleId = schedule.ms_id,
                     scheduledTime = schedule.ms_scheduled_time,
                     takenTime = takenTime,
-                    status = IntakeStatus.TAKEN
+                    status = IntakeStatus.TAKEN,
                 )
 
                 if (logId > 0) {
@@ -327,11 +381,20 @@ class WelcomeActivity : AppCompatActivity() {
             dialog.dismiss()
         }
 
-        // "No" Button (Keep as Pending/Gray)
+        // "No" Button (Keep as Pending/Missed)
         builder.setNegativeButton("No") { dialog, _ ->
             Toast.makeText(this@WelcomeActivity, "Intake pending.", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }
         builder.show()
+    }
+
+    // --- Extension function to convert DP to Pixels ---
+    private fun Int.dpToPx(): Int {
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            this.toFloat(),
+            resources.displayMetrics
+        ).toInt()
     }
 }

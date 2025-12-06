@@ -6,6 +6,7 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationIntakeLog
 import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationScheduler
+import java.time.LocalTime
 
 /**
  * Data Access Object for the MedicationIntakeLog table.
@@ -59,6 +60,15 @@ interface MedicationIntakeLogDao {
     )
     suspend fun getIntakesForMedication(medId: Int): List<MedicationIntakeLog>
 
+    /**
+     * Checks if a specific schedule time for a medication was logged as taken on a given date.
+     * Searches by schedule ID (mil_ms_id) AND the specific date (mil_date).
+     * @param msId The ID of the MedicationScheduler.
+     * @param date The date to check (e.g., "2025-12-06").
+     * @return The MedicationIntakeLog entry (or null if not found).
+     */
+    @Query("SELECT * FROM medication_intake_log WHERE mil_ms_id = :msId AND mil_date = :date LIMIT 1")
+    suspend fun getIntakeLogByScheduleAndDate(msId: Int, date: String): MedicationIntakeLog?
 
     /*********************            UPDATE/INSERT                **********************/
     /**
