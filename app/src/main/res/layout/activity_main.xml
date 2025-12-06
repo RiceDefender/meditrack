@@ -48,7 +48,7 @@
         android:textColor="#000000"
         android:background="@color/light_green"
         android:padding="12dp"
-        android:hint="@string/email_address"
+        android:hint="@string/username"
         android:textStyle="bold"/>
 
     <EditText
