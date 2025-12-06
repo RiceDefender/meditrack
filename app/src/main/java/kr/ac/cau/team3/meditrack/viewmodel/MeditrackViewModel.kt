@@ -83,7 +83,9 @@ class MeditrackViewModel(
         _medications.value = meds
         return meds
     }
-
+    suspend fun deleteMedicationById(medicationId: Int): Int {
+        return repo.deleteMedicationById(medicationId)
+    }
 
     // -------------------------------------------------------------
     // SCHEDULERS

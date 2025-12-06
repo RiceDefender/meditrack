@@ -26,6 +26,7 @@ import kr.ac.cau.team3.meditrack.viewmodel.GenericViewModelFactory
 import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
 import java.time.LocalTime
 import kotlin.getValue
+import android.util.Log // Added for logging
 
 class NewPrescriptionActivity : AppCompatActivity() {
 
@@ -37,13 +38,21 @@ class NewPrescriptionActivity : AppCompatActivity() {
     private lateinit var profileImage: ImageView
     private lateinit var photoUri: Uri
 
+    private var userId: Int = -1
+    private var userName: String? = null
+
+    private lateinit var radioEveryDay: RadioButton
+    private lateinit var radioEveryWeek: RadioButton
+    private lateinit var radioEveryMonth: RadioButton
+    private lateinit var radioEveryYear: RadioButton
+    private lateinit var weekdaysLayout: LinearLayout
+
     private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             profileImage.setImageURI(photoUri)
         }
     }
 
-    // open camera function
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
@@ -63,14 +72,19 @@ class NewPrescriptionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_new_prescription)
 
-        // linking to database
         repository = MeditrackRepository(
             MeditrackDatabase.getDatabase(this)
         )
-        val userId = intent.getIntExtra("USER_ID", -1)
+        userId = intent.getIntExtra("USER_ID", -1)
+        userName = intent.getStringExtra("USER_NAME")
 
+        if (userId == -1) {
+            Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_LONG).show()
+            finish()
+            return
+        }
 
-        //importing the photo
+        // --- UI Initialization ---
         profileImage = findViewById(R.id.profileImage)
         val addPhotoButton = findViewById<ImageView>(R.id.addPhotoButton)
         val importPhotoButton = findViewById<ImageView>(R.id.importPhoto)
@@ -84,207 +98,122 @@ class NewPrescriptionActivity : AppCompatActivity() {
             pickImageLauncher.launch("image/*")
         }
 
-        //button go back
         buttonGoBack.setOnClickListener {
-            startActivity(Intent(this, WelcomeActivity::class.java))
+            val intent = Intent(this, WelcomeActivity::class.java)
+            intent.putExtra("USER_ID", userId)
+            intent.putExtra("USER_NAME", userName)
+            startActivity(intent)
+            finish()
         }
 
-        //if switch ON, hide calendar picker
+        // --- Date Range Switch ---
         val editStartDate = findViewById<EditText>(R.id.editStartDate)
         val editEndDate = findViewById<EditText>(R.id.editEndDate)
-
         val switch1 = findViewById<androidx.appcompat.widget.SwitchCompat>(R.id.switch1)
 
         fun updateDateFields(isChecked: Boolean) {
-            if (isChecked) {
-                editStartDate.visibility = View.GONE
-                editEndDate.visibility = View.GONE
-                editStartDate.isEnabled = false
-                editEndDate.isEnabled = false
-            } else {
-                editStartDate.visibility = View.VISIBLE
-                editEndDate.visibility = View.VISIBLE
-                editStartDate.isEnabled = true
-                editEndDate.isEnabled = true
-            }
+            val visibility = if (isChecked) View.GONE else View.VISIBLE
+            editStartDate.visibility = visibility
+            editEndDate.visibility = visibility
+            editStartDate.isEnabled = !isChecked
+            editEndDate.isEnabled = !isChecked
         }
 
-
         updateDateFields(switch1.isChecked)
-
 
         switch1.setOnCheckedChangeListener { _, isChecked ->
             updateDateFields(isChecked)
         }
 
+        editStartDate.setOnClickListener { showDatePicker(it as EditText) }
+        editEndDate.setOnClickListener { showDatePicker(it as EditText) }
 
-        editStartDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val datePicker = DatePickerDialog(
-                this,
-                { _, year, month, day ->
-                    editStartDate.setText("$year/${month + 1}/$day")
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePicker.show()
-        }
-
-        editEndDate.setOnClickListener {
-            val calendar = Calendar.getInstance()
-            val datePicker = DatePickerDialog(
-                this,
-                { _, year, month, day ->
-                    editEndDate.setText("$year/${month + 1}/$day")
-                },
-                calendar.get(Calendar.YEAR),
-                calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH)
-            )
-            datePicker.show()
-        }
-
-        // checkbox for the times of the day multiple can be chosen
-        val checMorning = findViewById<CheckBox>(R.id.checkMorning)
-        val checkAfternoon = findViewById<CheckBox>(R.id.checkAfternoon)
-        val checkEvening = findViewById<CheckBox>(R.id.checkEvening)
-        //if "add a custom time" button checked, we show the time picker
+        // --- Time Checkboxes and Custom Time ---
         val checkCustomTime = findViewById<CheckBox>(R.id.checkCustomTime)
         val editHour = findViewById<EditText>(R.id.editHour)
 
         editHour.visibility = if (checkCustomTime.isChecked) View.VISIBLE else View.GONE
         checkCustomTime.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                editHour.visibility = View.VISIBLE
-            } else {
-                editHour.visibility = View.GONE
-            }
+            editHour.visibility = if (isChecked) View.VISIBLE else View.GONE
         }
 
-        //spinners
+        editHour.isFocusable = false
+        editHour.isClickable = true
+        editHour.setOnClickListener { showTimePicker(editHour) }
+
+        // --- Spinners ---
         val spinner1 = findViewById<Spinner>(R.id.spinnerMedicineType)
         val options1 = listOf("Tablet/ Pill", "Syrup", "Drops", "Capsule")
         val adapter1 = ArrayAdapter(this, R.layout.spinner_item, options1)
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner1.adapter = adapter1
-        spinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {}
-            override fun onNothingSelected(parent: AdapterView<*>) {}
-        }
 
         val spinner2 = findViewById<Spinner>(R.id.spinnerUnit)
         val options2 = listOf("mg", "ml", "drops", "capsules")
         val adapter2 = ArrayAdapter(this, R.layout.spinner_item, options2)
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinner2.adapter = adapter2
-        spinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {}
-            override fun onNothingSelected(parent: AdapterView<*>) {}
+
+        // --- Frequency Radio Buttons ---
+        radioEveryDay = findViewById(R.id.radioEveryDay)
+        radioEveryWeek = findViewById(R.id.radioEveryWeek)
+        radioEveryMonth = findViewById(R.id.radioEveryMonth)
+        radioEveryYear = findViewById(R.id.radioEveryYear)
+        weekdaysLayout = findViewById(R.id.weekdaysLayout)
+
+        // Refactored Radio Button Click Logic
+        val radioGroupListener = View.OnClickListener { view ->
+            radioEveryDay.isChecked = (view.id == R.id.radioEveryDay)
+            radioEveryWeek.isChecked = (view.id == R.id.radioEveryWeek)
+            radioEveryMonth.isChecked = (view.id == R.id.radioEveryMonth)
+            radioEveryYear.isChecked = (view.id == R.id.radioEveryYear)
+
+            weekdaysLayout.visibility = if (view.id == R.id.radioEveryWeek) View.VISIBLE else View.GONE
+            // If you have hidden EditTexts for interval (e.g., inputEveryMonth),
+            // you would toggle their visibility here based on the selected frequency.
         }
 
-        // This is for the RadioButton to work normally, meaning we can only
-        // choose a single one of them
-        val radioEveryDay = findViewById<RadioButton>(R.id.radioEveryDay)
-        val radioEveryWeek = findViewById<RadioButton>(R.id.radioEveryWeek)
-        val radioEveryMonth = findViewById<RadioButton>(R.id.radioEveryMonth)
-        val radioEveryYear = findViewById<RadioButton>(R.id.radioEveryYear)
-        var selectFrequency = radioEveryDay// we need to get the frequency first
+        radioEveryDay.setOnClickListener(radioGroupListener)
+        radioEveryWeek.setOnClickListener(radioGroupListener)
+        radioEveryMonth.setOnClickListener(radioGroupListener)
+        radioEveryYear.setOnClickListener(radioGroupListener)
 
-        radioEveryDay.setOnClickListener {
-            radioEveryDay.isChecked = true
-            radioEveryWeek.isChecked = false
-            radioEveryMonth.isChecked = false
-            radioEveryYear.isChecked = false
-        }
-
-        radioEveryWeek.setOnClickListener {
-            radioEveryDay.isChecked = false
-            radioEveryWeek.isChecked = true
-            radioEveryMonth.isChecked = false
-            radioEveryYear.isChecked = false
-        }
-
-        radioEveryMonth.setOnClickListener {
-            radioEveryDay.isChecked = false
-            radioEveryWeek.isChecked = false
-            radioEveryMonth.isChecked = true
-            radioEveryYear.isChecked = false
-        }
-
-        radioEveryYear.setOnClickListener {
-            radioEveryDay.isChecked = false
-            radioEveryWeek.isChecked = false
-            radioEveryMonth.isChecked = false
-            radioEveryYear.isChecked = true
-        }
-
-        // weekday thing
-        val weekdaysLayout = findViewById<LinearLayout>(R.id.weekdaysLayout)
-        radioEveryWeek.setOnClickListener {
-            radioEveryDay.isChecked = false
-            radioEveryWeek.isChecked = true
-            radioEveryMonth.isChecked = false
-            radioEveryYear.isChecked = false
-
-            weekdaysLayout.visibility = View.VISIBLE   // SHOW weekdays
-        }
-        radioEveryDay.setOnClickListener {
-            radioEveryDay.isChecked = true
-            radioEveryWeek.isChecked = false
-            radioEveryMonth.isChecked = false
-            radioEveryYear.isChecked = false
-
-            weekdaysLayout.visibility = View.GONE      // HIDE weekdays
-        }
-        radioEveryMonth.setOnClickListener {
-            weekdaysLayout.visibility = View.GONE
-        }
-        radioEveryYear.setOnClickListener {
-            weekdaysLayout.visibility = View.GONE
-        }
-
-        //time picker
-
-        editHour.isFocusable = false
-        editHour.isClickable = true
-        editHour.setOnClickListener {
-            showTimePicker(editHour)
-        }
-
+        // --- Save Button ---
         val saveButton = findViewById<ImageButton>(R.id.confirmButton)
         saveButton.setOnClickListener {
+            saveMedication()
+        }
+    }
 
-            val name = findViewById<EditText>(R.id.editMedicineName).text.toString()
-            val category = spinner1.selectedItem.toString()
-            val frequency = getSelectedFrequency()
-            val dosage = findViewById<EditText>(R.id.editDosage).text.toString() + " " +
-                    spinner2.selectedItem.toString()
-            val weekdays : List<Weekday>? = getSelectedWeekdays()
-            val interval = getSelectedInterval(frequency)
-            if ( frequency == Frequency.Weekly && (weekdays == null || weekdays.size != interval)) {
-                // Handle invalid input
-                return@setOnClickListener
-            }
+    private fun saveMedication() {
+        val name = findViewById<EditText>(R.id.editMedicineName).text.toString()
+        val category = findViewById<Spinner>(R.id.spinnerMedicineType).selectedItem.toString()
+        val dosageUnit = findViewById<Spinner>(R.id.spinnerUnit).selectedItem.toString()
+        val dosage = findViewById<EditText>(R.id.editDosage).text.toString() + " " + dosageUnit
 
-            val times = mutableListOf<Pair<LocalTime, TimeOfDay>>()
-            if (checMorning.isChecked) {
-                times.add(LocalTime.of(8, 0) to TimeOfDay.Morning)
-            }
-            if (checkAfternoon.isChecked) {
-                times.add(LocalTime.of(13, 0) to TimeOfDay.Afternoon)
-            }
-            if (checkEvening.isChecked) {
-                times.add(LocalTime.of(19, 0) to TimeOfDay.Evening)
-            }
-            if (checkCustomTime.isChecked) {
-                val customTime = LocalTime.parse(editHour.text.toString())
-                times.add(customTime to TimeOfDay.Custom)
-            }
+        val frequency = getSelectedFrequency()
+        val weekdays: List<Weekday>? = if (frequency == Frequency.Weekly) getSelectedWeekdays() else null
+        val interval = getSelectedInterval(frequency)
 
-            lifecycleScope.launch {
+        // Basic validation
+        if (name.isBlank() || findViewById<EditText>(R.id.editDosage).text.isBlank()) {
+            Toast.makeText(this, "Please fill in medication name and dosage.", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (frequency == Frequency.Weekly && weekdays.isNullOrEmpty()) {
+            Toast.makeText(this, "Please select at least one day for weekly frequency.", Toast.LENGTH_SHORT).show()
+            return
+        }
 
+        val times = getSelectedTimes()
+        if (times.isEmpty()) {
+            Toast.makeText(this, "Please select at least one intake time.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+
+        lifecycleScope.launch {
+            try {
                 // Insert medication
                 val medId = vm.addMedication(
                     medication_user_id = userId,
@@ -304,11 +233,18 @@ class NewPrescriptionActivity : AppCompatActivity() {
                     )
                 }
 
-                startActivity(Intent(this@NewPrescriptionActivity, MyPrescriptionsActivity::class.java))
+                Toast.makeText(this@NewPrescriptionActivity, "Prescription saved!", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this@NewPrescriptionActivity, MyPrescriptionsActivity::class.java)
+                intent.putExtra("USER_ID", userId)
+                intent.putExtra("USER_NAME", userName)
+                startActivity(intent)
+                finish()
+            } catch (e: Exception) {
+                Log.e("NewPrescription", "Error saving medication: ${e.message}", e)
+                Toast.makeText(this@NewPrescriptionActivity, "Error saving prescription.", Toast.LENGTH_LONG).show()
             }
         }
     }
-
 
     @SuppressLint("DefaultLocale")
     private fun showTimePicker(editText: EditText) {
@@ -325,8 +261,20 @@ class NewPrescriptionActivity : AppCompatActivity() {
         timePicker.show()
     }
 
+    private fun showDatePicker(editText: EditText) {
+        val calendar = Calendar.getInstance()
+        val datePicker = DatePickerDialog(
+            this,
+            { _, year, month, day ->
+                editText.setText("$year/${month + 1}/$day")
+            },
+            calendar.get(Calendar.YEAR),
+            calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)
+        )
+        datePicker.show()
+    }
 
-    //function to open the camera
     private fun openCamera() {
         val photoFile = File.createTempFile("profile_image", ".jpg", cacheDir)
         photoUri = FileProvider.getUriForFile(this, "${packageName}.provider", photoFile)
@@ -349,23 +297,54 @@ class NewPrescriptionActivity : AppCompatActivity() {
 
     private fun getSelectedFrequency(): Frequency {
         return when {
-            findViewById<RadioButton>(R.id.radioEveryDay).isChecked -> Frequency.Daily
-            findViewById<RadioButton>(R.id.radioEveryWeek).isChecked -> Frequency.Weekly
-            findViewById<RadioButton>(R.id.radioEveryMonth).isChecked -> Frequency.Monthly
-            findViewById<RadioButton>(R.id.radioEveryYear).isChecked -> Frequency.Yearly
-            else -> Frequency.Daily
+            radioEveryDay.isChecked -> Frequency.Daily
+            radioEveryWeek.isChecked -> Frequency.Weekly
+            radioEveryMonth.isChecked -> Frequency.Monthly
+            radioEveryYear.isChecked -> Frequency.Yearly
+            else -> Frequency.Daily // Default
         }
     }
 
     private fun getSelectedInterval(freq: Frequency): Int? {
-        return when {
-            freq == Frequency.Daily -> null
-            freq == Frequency.Weekly -> findViewById<EditText>(R.id.inputEveryWeek).text.toString().toIntOrNull()
-            freq == Frequency.Monthly -> findViewById<EditText>(R.id.inputEveryMonth).text.toString().toIntOrNull()
-            freq == Frequency.Yearly -> findViewById<EditText>(R.id.inputEveryYear).text.toString().toIntOrNull()
+        // This relies on you having EditTexts named inputEveryWeek, inputEveryMonth, inputEveryYear
+        // in your layout, linked to the corresponding frequency selection.
+        return when (freq) {
+            Frequency.Weekly -> findViewById<EditText>(R.id.inputEveryWeek)?.text.toString().toIntOrNull()
+            Frequency.Monthly -> findViewById<EditText>(R.id.inputEveryMonth)?.text.toString().toIntOrNull()
+            Frequency.Yearly -> findViewById<EditText>(R.id.inputEveryYear)?.text.toString().toIntOrNull()
             else -> null
         }
     }
 
+    private fun getSelectedTimes(): List<Pair<LocalTime, TimeOfDay>> {
+        val times = mutableListOf<Pair<LocalTime, TimeOfDay>>()
+        val checMorning = findViewById<CheckBox>(R.id.checkMorning)
+        val checkAfternoon = findViewById<CheckBox>(R.id.checkAfternoon)
+        val checkEvening = findViewById<CheckBox>(R.id.checkEvening)
+        val checkCustomTime = findViewById<CheckBox>(R.id.checkCustomTime)
+        val editHour = findViewById<EditText>(R.id.editHour)
 
+        if (checMorning.isChecked) {
+            times.add(LocalTime.of(8, 0) to TimeOfDay.Morning)
+        }
+        if (checkAfternoon.isChecked) {
+            times.add(LocalTime.of(13, 0) to TimeOfDay.Afternoon)
+        }
+        if (checkEvening.isChecked) {
+            times.add(LocalTime.of(19, 0) to TimeOfDay.Evening)
+        }
+        if (checkCustomTime.isChecked) {
+            val customTimeString = editHour.text.toString()
+            try {
+                if (customTimeString.matches(Regex("\\d{2}:\\d{2}"))) {
+                    val customTime = LocalTime.parse(customTimeString)
+                    times.add(customTime to TimeOfDay.Custom)
+                }
+            } catch (e: Exception) {
+                // Ignore if time is malformed, but a Toast might be better for the user
+                Log.w("NewPrescription", "Invalid custom time format: $customTimeString")
+            }
+        }
+        return times
+    }
 }

@@ -29,6 +29,8 @@ class MeditrackRepository(
     suspend fun getMedicationsForUser(userId: Int) =
         db.medicationDao().getMedicationsForUser(userId)
 
+    suspend fun deleteMedicationById(medicationId: Int) =
+        db.medicationDao().deleteById(medicationId)
 
     // SCHEDULERS
     suspend fun insertScheduler(sched: MedicationScheduler): Int {
