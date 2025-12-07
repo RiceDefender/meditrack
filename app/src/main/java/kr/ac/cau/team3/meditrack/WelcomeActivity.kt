@@ -1,5 +1,6 @@
 package kr.ac.cau.team3.meditrack
 
+import android.Manifest
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -27,12 +28,19 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.app.AlertDialog
-import android.util.Log
+import android.content.pm.PackageManager
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import android.util.TypedValue // Used for dpToPx extension function
+import android.util.TypedValue
+import kr.ac.cau.team3.meditrack.util.NotificationScheduler
+import android.provider.Settings
+import android.net.Uri
+import android.os.Build
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -44,6 +52,15 @@ class WelcomeActivity : AppCompatActivity() {
     private var userId: Int = -1
     private var userName: String? = null
     private lateinit var scheduleContainer: LinearLayout // Container for dynamic medication blocks
+    private lateinit var scheduler: NotificationScheduler
+    // Define the request launcher as a class member:
+    private val requestPermissionLauncher = this.registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (!isGranted) {
+            Toast.makeText(this, "Notification permission denied. Reminders will not appear.", Toast.LENGTH_LONG).show()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +80,23 @@ class WelcomeActivity : AppCompatActivity() {
             Toast.makeText(this, "Error: User not logged in.", Toast.LENGTH_LONG).show()
             finish()
             return
+        }
+
+        // Initialize the scheduler:
+        scheduler = NotificationScheduler(applicationContext)
+        if (!scheduler.alarmManager.canScheduleExactAlarms()) {
+            val intent = Intent(
+                Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM,
+                ("package:$packageName").toUri()
+            )
+            // You might use registerForActivityResult or just startActivity here
+            startActivity(intent)
+            Toast.makeText(this, "Please allow 'Schedule exact alarms' access for reminders to work.", Toast.LENGTH_LONG).show()
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // API 33+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
 
         // UI Initialization
@@ -220,6 +254,13 @@ class WelcomeActivity : AppCompatActivity() {
             scheduleContainer.removeAllViews()
 
             val medications = vm.loadMedicationsForUser(userId)
+            // Clear old alarms before setting new ones for today
+            medications.forEach { medication ->
+                val schedules = vm.loadSchedules(medication.medication_id)
+                schedules.forEach { schedule ->
+                    scheduler.cancelNotification(schedule.ms_id)
+                }
+            }
             val todayScheduleList = mutableListOf<Pair<Medication, MedicationScheduler>>()
 
             for (medication in medications) {
@@ -236,6 +277,7 @@ class WelcomeActivity : AppCompatActivity() {
                     val schedules = vm.loadSchedules(medication.medication_id)
                     schedules.forEach { schedule ->
                         todayScheduleList.add(Pair(medication, schedule))
+                        scheduler.scheduleNotification(schedule.ms_id, schedule.ms_scheduled_time)
                     }
                 }
             }

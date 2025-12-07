@@ -45,6 +45,8 @@ class MeditrackRepository(
     suspend fun getSchedulersForMed(medId: Int) =
         db.medicationSchedulerDao().getSchedules(medId)
 
+    suspend fun getSchedulerById(msId: Int) =
+        db.medicationSchedulerDao().getById(msId)
 
     // LOGS
     suspend fun logIntake(log: MedicationIntakeLog): Int {
