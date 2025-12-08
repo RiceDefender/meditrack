@@ -63,7 +63,7 @@
         android:textColor="#000000"
         android:background="@color/light_green"
         android:padding="12dp"
-        android:hint="@string/password"
+        android:hint="@string/password22"
         android:textStyle="bold"/>
 
     <CheckBox
