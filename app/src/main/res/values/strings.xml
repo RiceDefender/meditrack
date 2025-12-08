@@ -116,4 +116,11 @@
     <string name="confirm_password">Confirm Password *</string>
     <string name="sign_up">SIGN UP</string>
     <string name="show_password">Show password</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+    <string name="sun">Sun</string>
 </resources>

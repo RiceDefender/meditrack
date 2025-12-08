@@ -110,7 +110,7 @@
         android:textSize="18sp"
         android:hint="@string/e_g_paracetamol"
         android:inputType="textPersonName"
-        android:textColor="#000000"
+        android:textColor="@color/white"
         android:textColorHint="#FFFFFF"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/medicineName"
@@ -414,39 +414,53 @@
 
             <CheckBox
                 android:id="@+id/checkMon"
-                android:text="Mon"
+                android:text="@string/mon"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
             <CheckBox
                 android:id="@+id/checkTue"
-                android:text="Tue"
+                android:text="@string/tue"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
             <CheckBox
                 android:id="@+id/checkWed"
-                android:text="Wed"
+                android:text="@string/wed"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
             <CheckBox
                 android:id="@+id/checkThu"
-                android:text="Thu"
+                android:text="@string/thu"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
             <CheckBox
                 android:id="@+id/checkFri"
-                android:text="Fri"
+                android:text="@string/fri"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-            <CheckBox
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
+             <CheckBox
                 android:id="@+id/checkSat"
-                android:text="Sat"
+                android:text="@string/sat"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
             <CheckBox
                 android:id="@+id/checkSun"
-                android:text="Sun"
+                android:text="@string/sun"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/white"/>
         </LinearLayout>
 
         <View
