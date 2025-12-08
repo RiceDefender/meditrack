@@ -6,6 +6,16 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="your_prescription">Your Prescription</string>
+    <string name="back">Back</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="add_photo">Add Photo</string>
+    <string name="import_photo">Import Photo</string>
+    <string name="type">Type</string>
+    <string name="dosage">Dosage</string>
+    <string name="unit">Unit</string>
+    <string name="input_number">Input number</string>
+
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
@@ -42,5 +52,68 @@
         sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+
+
+
+
+
+
     </string>
+    <string name="e_g_paracetamol">e.g. \'Paracetamol\'</string>
+    <string name="medicine_name">Medicine Name</string>
+    <string name="end_date">End Date</string>
+    <string name="date_calendar_placeholder">yyyy/mm/dd</string>
+    <string name="starting_date">Starting Date</string>
+    <string name="menu">Menu</string>
+    <string name="hello">Hello !</string>
+    <string name="we_are_happy_to_help_you_stay_on_track">We are happy to help you stay on track.</string>
+    <string name="add_a_new_prescription">+ Add a new Prescription</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
+    <string name="sign_in">LOG IN</string>
+    <string name="forgot_password">Forgot password?</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email address</string>
+    <string name="login_to_your_account">Login to your Account</string>
+    <string name="meditrack">meditrack</string>
+    <string name="frequency">Frequency</string>
+    <string name="_1">1</string>
+    <string name="times">time(s)</string>
+    <string name="week_s">weekly</string>
+    <string name="times2">Time(s)</string>
+    <string name="day_s">daily</string>
+    <string name="_1_2">1</string>
+    <string name="month_s">monthly</string>
+    <string name="year_s">yearly</string>
+    <string name="times_of_the_day">Times of the day</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="add_a_custom_time">+ Add a custom time</string>
+    <string name="hh_mm">HH:mm</string>
+    <string name="ongoing_treatment">Ongoing treatment</string>
+    <string name="today">Today</string>
+    <string name="paracetamol">Paracetamol</string>
+    <string name="_1_pill">(1 pill)</string>
+    <string name="placeholder_pic">Placeholder_pic</string>
+    <string name="placeholder_state">placeholder state</string>
+    <string name="example_12_30">12:30</string>
+    <string name="medicine_2">Medicine #2</string>
+    <string name="_200_mg">(200 mg)</string>
+    <string name="_15_10_example">15:10</string>
+    <string name="my_prescriptions">My Prescriptions</string>
+    <string name="_1_pill_every_day">1 pill every day</string>
+    <string name="ongoing">Ongoing</string>
+    <string name="_1_pill_every_week">1 pill every week</string>
+    <string name="until_february_20th_2025">Until February 20th 2025</string>
+    <string name="todo">TODO</string>
+    <string name="new_prescription">+ New prescription</string>
+    <string name="my_prescription_s">My Prescription(s)</string>
+    <string name="create_your_account">Create your Account</string>
+    <string name="username">Username *</string>
+    <string name="name">Name *</string>
+    <string name="email">Email *</string>
+    <string name="password_2">Password *</string>
+    <string name="confirm_password">Confirm Password *</string>
+    <string name="sign_up">SIGN UP</string>
+    <string name="show_password">Show password</string>
 </resources>

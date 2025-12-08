@@ -25,5 +25,6 @@ data class MedicationIntakeLog(
     val mil_ms_id: Int,
     val mil_scheduled_time: LocalTime, // Timestamp
     val mil_taken_time: Timestamp?, // Nullable Timestamp
-    val mil_status: IntakeStatus // Typeconverter
+    val mil_status: IntakeStatus, // Typeconverter
+    val mil_date: String // Store as "YYYY-MM-DD" for direct comparison
 )

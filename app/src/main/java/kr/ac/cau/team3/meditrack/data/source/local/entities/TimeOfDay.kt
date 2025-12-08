@@ -4,5 +4,6 @@ enum class TimeOfDay {
     Morning,
     Afternoon,
     Evening,
-    Night
+    Night,
+    Custom
 }

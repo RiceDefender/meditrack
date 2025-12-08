@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_one"
+        android:title="@string/my_prescription_s" />
+    <item
+        android:id="@+id/nav_two"
+        android:title="@string/new_prescription"/>
+
+
+    <!--i'll also maybe add a log out button if we keep the
+     login function. -->
+</menu>
+

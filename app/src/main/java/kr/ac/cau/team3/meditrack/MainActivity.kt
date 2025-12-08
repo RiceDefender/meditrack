@@ -1,125 +1,87 @@
 package kr.ac.cau.team3.meditrack
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
+import android.widget.Button
+import android.widget.CheckBox
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
+import android.text.InputType
+import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kr.ac.cau.team3.meditrack.databinding.ActivityMainBinding
 import kr.ac.cau.team3.meditrack.data.source.local.database.MeditrackDatabase
-import kr.ac.cau.team3.meditrack.data.source.local.entities.Frequency
-import kr.ac.cau.team3.meditrack.data.source.local.entities.Medication
-import kr.ac.cau.team3.meditrack.data.source.local.entities.User
-import kr.ac.cau.team3.meditrack.data.source.local.entities.Weekday
+import kr.ac.cau.team3.meditrack.viewmodel.GenericViewModelFactory
+import kr.ac.cau.team3.meditrack.viewmodel.MeditrackViewModel
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
-    private val db by lazy { MeditrackDatabase.getDatabase(this) }
+    private lateinit var repository: MeditrackRepository
+    private val vm: MeditrackViewModel by viewModels {
+        GenericViewModelFactory { MeditrackViewModel(repository) }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        // linking to database
+        repository = MeditrackRepository(
+            MeditrackDatabase.getDatabase(this)
+        )
 
-        setSupportActionBar(binding.toolbar)
+        val usernameField = findViewById<EditText>(R.id.editTextTextEmailAddress)
+        val passwordEditText = findViewById<EditText>(R.id.editTextPassword)
+        val buttonSignIn = findViewById<Button>(R.id.button2)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        appBarConfiguration = AppBarConfiguration(navController.graph)
-        setupActionBarWithNavController(navController, appBarConfiguration)
+        buttonSignIn.setOnClickListener {
+            val name = usernameField.text.toString()
+            val password = passwordEditText.text.toString()
 
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
+            lifecycleScope.launch {
+                val user = vm.loginUserByName(name, password)
+
+                if (user != null) {
+                    // Send userId to next activity
+                    val intent = Intent(this@MainActivity, WelcomeActivity::class.java)
+                    intent.putExtra("USER_ID", user.user_id)
+                    intent.putExtra("USER_Name", user.user_name)
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Invalid username or password",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         }
 
-        // 2. Run the Test immediately on startup
-        runDatabaseSmokeTest()
-    }
 
-    private fun runDatabaseSmokeTest() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            Log.d("DB_TEST", "--- Starting Database Smoke Test ---")
+        //checkbox that shows the password
+        val checkBox = findViewById<CheckBox>(R.id.checkBoxShowPassword)
+        val originalTypeface = passwordEditText.typeface
 
-            try {
-                // STEP 1: Create & Insert User
-                val testUser = User(
-                    user_name = "TestUser_${System.currentTimeMillis()}", // Unique name
-                    user_passwordhash = "secret_hash"
-                )
-                db.UserDao().upsert(testUser)
-
-                // Fetch back to get the auto-generated ID
-                val savedUser = db.UserDao().getByName(testUser.user_name)
-
-                if (savedUser == null) {
-                    Log.e("DB_TEST", "Failed to save user!")
-                    return@launch
-                }
-                Log.d("DB_TEST", "User Saved: ID=${savedUser.user_id}, Name=${savedUser.user_name}")
-
-
-                // STEP 2: Create & Insert Medication linked to User
-                val testMed = Medication(
-                    medication_user_id = savedUser.user_id,
-                    medication_name = "Ibuprofen",
-                    medication_category = "Painkiller",
-                    medication_frequency = Frequency.Daily,
-                    medication_weekdays = listOf(Weekday.Monday, Weekday.Wednesday),
-                    medication_interval = null
-                )
-                db.MedicationDao().upsert(testMed)
-                Log.d("DB_TEST", "Medication inserted.")
-
-
-                // STEP 3: Verify Data
-                val userMeds = db.MedicationDao().getMedicationsForUser(savedUser.user_id)
-                Log.d("DB_TEST", "--- Fetching Results ---")
-                Log.d("DB_TEST", "Found ${userMeds.size} medications for user ${savedUser.user_id}")
-
-                userMeds.forEach { med ->
-                    Log.d("DB_TEST", "READ: ${med.medication_name} (Freq: ${med.medication_frequency})")
-                    Log.d("DB_TEST", "DAYS: ${med.medication_weekdays}")
-                }
-
-            } catch (e: Exception) {
-                Log.e("DB_TEST", "CRASH DURING TEST", e)
+        checkBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                passwordEditText.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            } else {
+                passwordEditText.inputType =
+                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
 
-            Log.d("DB_TEST", "--- End of Test ---")
+            passwordEditText.typeface = originalTypeface
+
+            passwordEditText.setSelection(passwordEditText.text.length)
         }
-    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
+        //button to go to signup page
+        val signUp = findViewById<TextView>(R.id.textView5)
+        signUp.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
         }
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration)
-                || super.onSupportNavigateUp()
     }
 }

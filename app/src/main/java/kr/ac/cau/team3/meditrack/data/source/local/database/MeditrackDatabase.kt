@@ -18,14 +18,14 @@ import kr.ac.cau.team3.meditrack.data.source.local.entities.MedicationScheduler
 /**
  * The Room Database that contains the tables.
  */
-@Database(entities = [User::class,Medication::class,MedicationIntakeLog::class,MedicationScheduler::class], version = 1, exportSchema = false)
+@Database(entities = [User::class,Medication::class,MedicationIntakeLog::class,MedicationScheduler::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class) // Use your custom class here
 abstract class MeditrackDatabase : RoomDatabase() {
 
-    abstract fun UserDao(): UserDao
-    abstract fun MedicationDao(): MedicationDao
-    abstract fun MedicationSchedulerDao(): MedicationSchedulerDao
-    abstract fun MedicationIntakeLogDao(): MedicationIntakeLogDao
+    abstract fun userDao(): UserDao
+    abstract fun medicationDao(): MedicationDao
+    abstract fun medicationSchedulerDao(): MedicationSchedulerDao
+    abstract fun medicationIntakeLogDao(): MedicationIntakeLogDao
 
     companion object {
         @Volatile
