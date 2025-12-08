@@ -45,7 +45,7 @@ class NewPrescriptionActivity : AppCompatActivity() {
     private lateinit var radioEveryWeek: RadioButton
     private lateinit var radioEveryMonth: RadioButton
     private lateinit var radioEveryYear: RadioButton
-    private lateinit var weekdaysLayout: LinearLayout
+    private lateinit var weekdaysLayout: GridLayout
 
     private val takePhotoLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {

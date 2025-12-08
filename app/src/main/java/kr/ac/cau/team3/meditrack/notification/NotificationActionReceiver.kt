@@ -45,6 +45,11 @@ class NotificationActionReceiver : BroadcastReceiver() {
                         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                         notificationManager.cancel(msId)
 
+                        // Send broadcast to update UI
+                        val updateIntent = Intent("UPDATE_UI")
+                        context.sendBroadcast(updateIntent)
+
+
                         // Show confirmation on the main thread
                         CoroutineScope(Dispatchers.Main).launch {
                             Toast.makeText(context, "Intake logged! Thank you.", Toast.LENGTH_LONG).show()

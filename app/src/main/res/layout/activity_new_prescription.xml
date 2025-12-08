@@ -292,7 +292,7 @@
     <Spinner
         android:id="@+id/spinnerUnit"
         android:layout_marginTop="12dp"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/green_700"
 
@@ -405,12 +405,12 @@
                 android:paddingEnd="10dp"/>
         </LinearLayout>
         <!-- check buttons of weekdays -->
-         <LinearLayout
+        <GridLayout
             android:id="@+id/weekdaysLayout"
             android:visibility="gone"
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:columnCount="5">
 
             <CheckBox
                 android:id="@+id/checkMon"
@@ -418,50 +418,58 @@
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
+                android:buttonTint="@color/white" />
+
             <CheckBox
                 android:id="@+id/checkTue"
                 android:text="@string/tue"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
+                android:buttonTint="@color/white" />
+
             <CheckBox
                 android:id="@+id/checkWed"
                 android:text="@string/wed"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
+                android:buttonTint="@color/white" />
+
             <CheckBox
                 android:id="@+id/checkThu"
                 android:text="@string/thu"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
+                android:buttonTint="@color/white" />
+
             <CheckBox
                 android:id="@+id/checkFri"
                 android:text="@string/fri"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
-             <CheckBox
+                android:buttonTint="@color/white" />
+
+            <CheckBox
                 android:id="@+id/checkSat"
                 android:text="@string/sat"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
+                android:buttonTint="@color/white" />
+
             <CheckBox
                 android:id="@+id/checkSun"
                 android:text="@string/sun"
                 android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/white"/>
-        </LinearLayout>
+                android:buttonTint="@color/white" />
+
+        </GridLayout>
+
 
         <View
             android:layout_width="match_parent"
@@ -555,12 +563,7 @@
                 android:paddingEnd="10dp"/>
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/white"
-            android:layout_marginVertical="4dp"
-            />
+
     </LinearLayout>
 
 

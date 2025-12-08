@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import kr.ac.cau.team3.meditrack.ConfirmIntakeActivity
 import kr.ac.cau.team3.meditrack.R
 import kr.ac.cau.team3.meditrack.broadcast.NotificationActionReceiver // To be created next
 
@@ -35,17 +36,20 @@ class NotificationHelper(private val context: Context) {
     fun sendMedicationNotification(msId: Int, hour: Int, minute: Int) {
 
         //Create the PendingIntent for the "Taken" action button
-        val takenIntent = Intent(context, NotificationActionReceiver::class.java).apply {
-            action = "ACTION_TAKEN"
+        val takenIntent = Intent(context, ConfirmIntakeActivity::class.java).apply {
             putExtra("MS_ID", msId)
-            // Use the msId for unique request code in the PendingIntent
+            putExtra("HOUR", hour)
+            putExtra("MINUTE", minute)
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         }
-        val takenPendingIntent = PendingIntent.getBroadcast(
+
+        val takenPendingIntent = PendingIntent.getActivity(
             context,
             msId,
             takenIntent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
+
 
         //Build the notification
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)

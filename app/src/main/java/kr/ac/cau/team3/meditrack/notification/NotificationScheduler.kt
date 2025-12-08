@@ -44,7 +44,6 @@ class NotificationScheduler(private val context: Context) {
 
         // Create the Intent and PendingIntent
         val intent = Intent(context, AlarmReceiver::class.java).apply {
-            // Pass the schedule ID so the receiver knows which medication it is
             putExtra("MS_ID", msId)
             putExtra("SCHEDULED_TIME_HOUR", scheduledTime.hour)
             putExtra("SCHEDULED_TIME_MINUTE", scheduledTime.minute)
@@ -52,17 +51,17 @@ class NotificationScheduler(private val context: Context) {
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            msId, // Use msId as unique request code
+            msId,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        // Set the repeating alarm
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
             pendingIntent
         )
+
 
         Log.d("Scheduler", "Alarm set for MS_ID $msId at ${scheduledTime}")
     }

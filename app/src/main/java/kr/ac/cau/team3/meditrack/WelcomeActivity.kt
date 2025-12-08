@@ -1,6 +1,7 @@
 package kr.ac.cau.team3.meditrack
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -28,6 +29,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.pm.PackageManager
 import java.time.LocalDate
 import java.time.LocalTime
@@ -62,9 +65,18 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
+    private val uiRefreshReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            loadAndDisplayTodaySchedule() //for bloc colors
+        }
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_welcome)
+
 
         // Linking to database
         repository = MeditrackRepository(
@@ -154,6 +166,23 @@ class WelcomeActivity : AppCompatActivity() {
         loadAndDisplayTodaySchedule()
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    override fun onResume() {
+        super.onResume()
+        registerReceiver(
+            uiRefreshReceiver,
+            android.content.IntentFilter("UPDATE_UI"),
+            Context.RECEIVER_NOT_EXPORTED
+        )
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+        unregisterReceiver(uiRefreshReceiver)
+    }
+
+
     // --- NEW HELPER FUNCTION FOR DATE CONVERSION ---
     /**
      * Converts a Timestamp to the "YYYY-MM-DD" date string required for mil_date.
@@ -232,6 +261,7 @@ class WelcomeActivity : AppCompatActivity() {
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun loadAndDisplayTodaySchedule() {
         if (userId == -1) return
 
@@ -330,10 +360,13 @@ class WelcomeActivity : AppCompatActivity() {
                 blockLayout.setBackgroundResource(R.drawable.bloc_taken_bg) // Green/Taken
             } else {
                 // Check if the scheduled time has passed (Missed vs. Pending)
-                val scheduledTime = LocalTime.of(schedule.ms_scheduled_time.hour, schedule.ms_scheduled_time.minute)
-                val isMissed = scheduledTime.isBefore(LocalTime.now())
+                val scheduledTime: LocalTime? = LocalTime.of(
+                    schedule.ms_scheduled_time.hour,
+                    schedule.ms_scheduled_time.minute
+                )
+                val isMissed = scheduledTime?.isBefore(LocalTime.now())
 
-                if (isMissed) {
+                if (isMissed == true) {
                     blockLayout.setBackgroundResource(R.drawable.bloc_late_bg) // Red/Missed (You need to define this drawable)
                 } else {
                     blockLayout.setBackgroundResource(R.drawable.bloc_normal_bg) // Gray/Pending
