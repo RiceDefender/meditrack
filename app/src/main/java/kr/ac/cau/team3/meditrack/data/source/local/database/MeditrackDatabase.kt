@@ -38,7 +38,6 @@ abstract class MeditrackDatabase : RoomDatabase() {
                     MeditrackDatabase::class.java,
                     "medication_database"
                 )
-                    .fallbackToDestructiveMigration() // optional, for quick dev
                     .build()
                 INSTANCE = instance
                 instance

@@ -31,6 +31,7 @@ import java.util.Locale
 import android.app.AlertDialog
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import java.time.LocalDate
 import java.time.LocalTime
@@ -71,6 +72,28 @@ class WelcomeActivity : AppCompatActivity() {
         }
     }
 
+    private val intakeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == "MEDICATION_INTAKE_LOGGED") {
+                // Instantly reload and refresh the UI
+                loadAndDisplayTodaySchedule()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // Check user ID validity before attempting to load data
+        if (userId != -1) {
+            // This ensures the schedule is reloaded every time the user returns to the app
+            loadAndDisplayTodaySchedule()
+        }
+        registerReceiver(
+            uiRefreshReceiver,
+            android.content.IntentFilter("UPDATE_UI"),
+            Context.RECEIVER_NOT_EXPORTED
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -162,19 +185,15 @@ class WelcomeActivity : AppCompatActivity() {
         // Calendar setup
         setupCalendarDisplay()
 
-        // Load and display today's medication schedule
-        loadAndDisplayTodaySchedule()
-    }
+        val filter = IntentFilter("MEDICATION_INTAKE_LOGGED")
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    override fun onResume() {
-        super.onResume()
-        registerReceiver(
-            uiRefreshReceiver,
-            android.content.IntentFilter("UPDATE_UI"),
-            Context.RECEIVER_NOT_EXPORTED
+        // Use ContextCompat for modern registration with the appropriate flag
+        ContextCompat.registerReceiver(
+            this,
+            intakeReceiver,
+            filter,
+            ContextCompat.RECEIVER_NOT_EXPORTED
         )
-
     }
 
     override fun onPause() {
@@ -182,6 +201,11 @@ class WelcomeActivity : AppCompatActivity() {
         unregisterReceiver(uiRefreshReceiver)
     }
 
+    override fun onDestroy() {
+        // Unregister remains the standard method
+        unregisterReceiver(intakeReceiver)
+        super.onDestroy()
+    }
 
     // --- NEW HELPER FUNCTION FOR DATE CONVERSION ---
     /**
@@ -264,6 +288,7 @@ class WelcomeActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun loadAndDisplayTodaySchedule() {
         if (userId == -1) return
+        scheduleContainer.removeAllViews()
 
         lifecycleScope.launch {
             // Determine today's Weekday enum for filtering

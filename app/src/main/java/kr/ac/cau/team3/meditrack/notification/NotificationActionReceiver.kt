@@ -53,6 +53,7 @@ class NotificationActionReceiver : BroadcastReceiver() {
                         // Show confirmation on the main thread
                         CoroutineScope(Dispatchers.Main).launch {
                             Toast.makeText(context, "Intake logged! Thank you.", Toast.LENGTH_LONG).show()
+                            context.sendBroadcast(Intent("MEDICATION_INTAKE_LOGGED"))
                         }
                     }
                 }

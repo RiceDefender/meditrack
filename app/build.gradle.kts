@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "kr.ac.cau.team3.meditrack"
-        minSdk = 34
+        minSdk = 30
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -50,10 +50,18 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    //Room include
-    val room_version = "2.8.4"
+    // Use a modern stable Room version (e.g., 2.6.1 is stable and well-tested)
+    val room_version = "2.6.1"
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+
+    // 1. ADD: Room Kotlin Extensions (provides coroutine support)
+    implementation("androidx.room:room-ktx:$room_version")
+
+    // 2. ADD: Kotlin Coroutines (required for all suspend functions)
+    val coroutines_version = "1.8.0" // Use a modern, stable version
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version")
     //GSON include
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
